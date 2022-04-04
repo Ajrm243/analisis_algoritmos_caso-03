@@ -1,0 +1,10 @@
+.animation-title {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.svg-animation {
+  width: 300px;
+  display: block;
+  margin: auto;
+}
