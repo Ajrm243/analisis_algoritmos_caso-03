@@ -23,7 +23,15 @@ class Operator : public Subject{
 
 
 class Selector : public Observer {
-    
+
+};
+
+class Router : public Observer {
+
+};
+
+class Generator : public Observer {
+
 };
 
 int main() {
