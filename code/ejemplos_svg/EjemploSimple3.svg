@@ -1,3 +1,7 @@
-<svg height="210" width="400">
-  <path d="M150 0 L75 200 L225 200 Z" />
+<svg height="80" width="300">
+  <g fill="none">
+    <path stroke="red" d="M5 20 l215 0" />
+    <path stroke="black" d="M5 40 l215 0" />
+    <path stroke="blue" d="M5 60 l215 0" />
+  </g>
 </svg>
