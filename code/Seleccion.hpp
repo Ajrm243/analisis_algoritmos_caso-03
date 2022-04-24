@@ -1,4 +1,5 @@
-#include "main.hpp"
+#include "../headers/main.hpp"
+#include "../headers/observers.hpp"
 
 /*
     *****Posible acomodo de la clase Seleccion 
@@ -20,7 +21,7 @@ public:
         else if (value == 2)
             cout << "Analizando intersecciones de puntos con valores de paths" << endl;
     }
-} ;
+};
 //Lista de colores dadas por el usuario
 list <string> lista_colores = {"red","yellow"};
 

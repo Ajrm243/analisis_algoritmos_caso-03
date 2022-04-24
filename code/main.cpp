@@ -1,9 +1,11 @@
 #include <iostream>
 #include <list>
 #include <bits/stdc++.h>
-#include "rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
-#include "rapidxml/rapidxml_utils.hpp" //Clase File
+#include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
+#include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/observers.hpp"
+#include "../headers/main.hpp"
+#include "Seleccion.hpp"
 
 //using namespace std;
 class Operator : public Subject{
@@ -37,7 +39,6 @@ class Generator : public Observer {
 };
 
 int main() {
-    /*
     //Leer XML
     file<> file("ejemplos_svg/EjemploSimple1.svg"); // Lee y carga el archivo en memoria
     xml_document<> myDoc; //Raíz del árbol DOM
@@ -53,10 +54,7 @@ int main() {
 
     //Modificar un atributo existente
     //Modifica el atributo indicado del primer elemento <path> que se encuentre
-    //xml_node<> *modifyNode = myDoc.first_node()->first_node("path");
-    */
-   
-
+    //xml_node<> *modifyNode = myDoc.first_node()->first_node("path")
 
     return 0;
 }
