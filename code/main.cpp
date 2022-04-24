@@ -34,23 +34,46 @@ void extractNodeData(xml_node<>* node){
   }
 }
 
-//Recorrer y Extraer los paths
-void extractPath(xml_node<>* node){
-  for (xml_node<> * student_node = node->first_node(); student_node; student_node = student_node->next_sibling())
-    {
-        cout << "\nStudent Type =   " << student_node->first_attribute("d")->value();
-        cout << endl;
-        if (node->type() == node_element){
-          cout << "Etiqueta: " << node->name() << endl;
 
-          for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
-            cout << "\tAtributo: " << attrib->name() << endl;
-            cout << "\t-Valor: " << attrib->value() << endl;
-      }   
-            // Interate over the Student Names
-        cout << endl;
+//Recorrer y Extraer los paths
+
+void extractData(xml_node<>* node){
+
+  for (node = node->first_node(); node != NULL; node = node->next_sibling()){
+    if (node->type() == node_element){
+      string etiqueta = node->name();
+      if (etiqueta == "path"){
+        cout << "Etiqueta: " << node->name() << endl;
+        for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
+          cout << "\tAtributo: " << attrib->name() << endl;
+          cout << "\t-Valor: " << attrib->value() << endl;
+        }
+      }
+
+      extractData(node);
     }
+  }
 }
+
+void extractPath(xml_document<>* doc){
+  xml_node<>* node = doc->first_node();
+
+  cout << "Etiqueta: " << node->name() << endl;
+  cout<< node->name()<<endl;
+  for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
+    cout << " Atributo: " << attrib->name() << endl;
+    cout << "\tValor: " << attrib->value() << endl;
+  }
+
+  extractData(node);
+}
+
+inline string attr_value_or_default(rapidxml::xml_attribute<>* attr, string default_value="") {
+    if(attr == nullptr) {
+        return default_value;
+    } else {
+        return attr->value();
+    }
 }
 
 /*
@@ -88,15 +111,20 @@ class Generator : public Observer {
 */
 int main() {
     //Leer XML
-    file<> file("ejemplos_svg/EjemploSimple2.svg"); // Lee y carga el archivo en memoria
+    file<> file("ejemplos_svg/EjemploSimple1.svg"); // Lee y carga el archivo en memoria
     xml_document<> myDoc; //Raíz del árbol DOM
     myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
 
     //Recorrer elementos y atributos
     //extractXMLData(&myDoc);
     xml_node<> *root = myDoc.first_node("svg");
+    // Get root node
+    list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
+
+ 
     cout << endl;
-    extractPath(root);
+    extractPath(&myDoc);
+
     //Modificar un atributo existente
     //Modifica el atributo indicado del primer elemento <path> que se encuentre
     //xml_node<> *modifyNode = myDoc.first_node()->first_node("path");
