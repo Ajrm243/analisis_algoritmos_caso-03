@@ -37,6 +37,7 @@ class Generator : public Observer {
 };
 
 int main() {
+    /*
     //Leer XML
     file<> file("ejemplos_svg/EjemploSimple1.svg"); // Lee y carga el archivo en memoria
     xml_document<> myDoc; //Raíz del árbol DOM
@@ -53,7 +54,8 @@ int main() {
     //Modificar un atributo existente
     //Modifica el atributo indicado del primer elemento <path> que se encuentre
     //xml_node<> *modifyNode = myDoc.first_node()->first_node("path");
-    
+    */
+   
 
 
     return 0;
