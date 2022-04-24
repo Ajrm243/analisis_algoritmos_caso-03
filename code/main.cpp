@@ -2,7 +2,11 @@
 #include "main.hpp"
 #include "Seleccion.hpp"
 
-//Globales
+/*
+*****************
+*    GLOBALES   *
+*****************
+*/
 int frames, angulo, height, width;
 list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
 
