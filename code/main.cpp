@@ -4,6 +4,7 @@
 
 //Globales
 int frames, angulo, height, width;
+list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
 
 
 //Recorre el elemento raíz del documento
@@ -78,9 +79,7 @@ int main() {
     //extractXMLData(&myDoc);
     xml_node<> *root = myDoc.first_node("svg");
     // Get root node
-    list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
 
- 
     cout << endl;
     extractPath(&myDoc);
 
