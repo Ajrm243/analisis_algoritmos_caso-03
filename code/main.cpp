@@ -1,10 +1,10 @@
-#include <iostream>
-#include <list>
-#include <sstream>
-#include <fstream>
 //#include "headers/observers.hpp"
 #include "main.hpp"
 #include "Seleccion.hpp"
+
+//Globales
+int frames, angulo, height, width;
+
 
 //Recorre el elemento raíz del documento
 void extractXMLData(xml_document<>* doc){
@@ -34,10 +34,6 @@ void extractNodeData(xml_node<>* node){
     }
   }
 }
-
-
-
-
 
 /*
 

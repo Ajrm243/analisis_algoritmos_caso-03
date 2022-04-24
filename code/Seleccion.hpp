@@ -1,9 +1,5 @@
 #include "main.hpp"
-#include <iostream>
-#include <list>
-#include <algorithm>
-#include <sstream>
-#include <fstream>
+
 
 //Lista de colores dadas por el usuario
 list <string> lista_colores = {"red","yellow"};
@@ -17,9 +13,18 @@ void extractData(xml_node<>* node){
         if (node->type() == node_element){
         string etiqueta = node->name();
         string relleno, color;
+        xml_attribute<>* attrib;
         if (etiqueta == "path"){
 
             cout << "Etiqueta: " << node->name() << endl;
+            attrib = node->first_attribute("stroke");
+            color = attrib->value();
+            list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
+            if(findIter != lista_colores.end()){
+                cout<<"Coincidencia encontrada"<<endl;
+            }
+
+            /*
             for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
                 relleno = attrib->name();
                 if (relleno == "stroke"){
@@ -29,12 +34,20 @@ void extractData(xml_node<>* node){
                         cout<<"Coincidencia encontrada"<<endl;
                     }
                 }
+                */
                 }
-        }
+        
         
         if (etiqueta == "g")
         {
             cout << "Etiqueta: " << node->name() << endl;
+            attrib = node->first_attribute("fill");
+            color = attrib->value();
+            list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
+            if(findIter != lista_colores.end()){
+                cout<<"Coincidencia encontrada"<<endl;
+            }
+            /*
             for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
                 relleno = attrib->name();
                 if (relleno == "fill"){
@@ -49,7 +62,8 @@ void extractData(xml_node<>* node){
                     }
                     
                 }
-                }
+                
+                }*/
         }
         extractData(node);
         }
