@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <sstream>
 #include <fstream>
-#include <ObserverPattern.h>
+#include <../headers/ObserverPattern.h>
 using namespace std;
 using namespace rapidxml; //Namespace de la librería
 

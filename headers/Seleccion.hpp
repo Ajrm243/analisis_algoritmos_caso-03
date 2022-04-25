@@ -1,8 +1,9 @@
-#include "main.hpp"
+#include "../code/main.hpp"
 
 /*
     *****Posible acomodo de la clase Seleccion ******
 */
+
 class Seleccion : public Observer {
 public:
     Seleccion() {}

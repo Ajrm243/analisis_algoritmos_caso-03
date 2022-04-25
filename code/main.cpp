@@ -1,6 +1,6 @@
-//#include "headers/observers.hpp"
+#include "../headers/observers.hpp"
 #include "main.hpp"
-#include "Seleccion.hpp"
+#include "../headers/Seleccion.hpp"
 
 /*
 *****************
