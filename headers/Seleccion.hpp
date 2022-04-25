@@ -27,62 +27,53 @@ public:
 //Lista de colores dadas por el usuario
 list <string> lista_colores = {"red","yellow"};
 
-//Recorrer y reconocer los paths
-void extractData(xml_node<>* node){
+void recolectarPaths(xml_node<>* node){
     //Reconocer con base en la etiqueta del nodo si los node_element "path" y "g" --> Por el momento
     //Por el momento unicamente se estan imprimiendo hasta definir la estructura que se utilizara para almacenarlas
+    
     for (node = node->first_node(); node != NULL; node = node->next_sibling()){
+        Path path;
         
         if (node->type() == node_element){
         string etiqueta = node->name();
-        string relleno, color;
-        xml_attribute<>* attrib;
+        path.setEtiqueta(etiqueta);
+        string d, color, idPath;
         if (etiqueta == "path"){
+            idPath = node->first_attribute("id")->value();
+            path.setId(idPath);
+            color = node->first_attribute("opacity")->value();
+            path.setColor(color);
+            d =  node->first_attribute("d")->value();
+            path.setPath(d);
 
-            cout << "Etiqueta: " << node->name() << endl;
-            attrib = node->first_attribute("stroke");
-            color = attrib->value();
-            list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
+            listaPathRecolectados.push_back(path);
+        }
+        
+        }
+        
+    }
+}
+
+
+
+void FiltrarColor(){
+    int numeroPath;
+    string color;
+    for (numeroPath=0; numeroPath<listaPathRecolectados.size(); numeroPath++){
+        Path path = listaPathRecolectados.at(numeroPath);
+        color = path.getColor();
+        list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
             if(findIter != lista_colores.end()){
                 //Seleccionar path para la siguiente fase de seleccion
                 cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
+                listaPathSeleccionados.push_back(path);
             }
-                }
-        
-        if (etiqueta == "g")
-        {
-            cout << "Etiqueta: " << node->name() << endl;
-            attrib = node->first_attribute("fill");
-            color = attrib->value();
-            list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
-            if(findIter != lista_colores.end()){
-                //Seleccionar path para la siguiente fase de seleccion
-                cout<<"Coincidencia encontrada"<<endl;//Hacer el append del elemento path
-            }
-        }
-        extractData(node);
-        }
-        
-        }
     }
-
-
-void extractPath(xml_document<>* doc){
-    xml_node<>* node = doc->first_node();
-
-    cout << "Etiqueta: " << node->name() << endl;
-    cout<< node->name()<<endl;
-    for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
-        //Reconocer y guardar valores del svg como el height y el width --> generar metodo get y set de ambos valores
-        cout << " Atributo: " << attrib->name() << endl;
-        cout << "\tValor: " << attrib->value() << endl;
-    }
-
-    extractData(node);
-    }
+}
 
 
 /*
+
 Analisis de los elementos del svg 
 
 *****************

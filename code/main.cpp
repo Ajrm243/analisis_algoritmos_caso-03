@@ -2,6 +2,8 @@
 #include "main.hpp"
 #include "../headers/Seleccion.hpp"
 
+
+
 /*
 *****************
 *    GLOBALES   *
@@ -9,6 +11,9 @@
 */
 int frames, angulo, height, width;
 list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
+
+vector <Path> listaPathRecolectados ;
+vector <Path> listaPathSeleccionados ;
 
 
 //Recorre el elemento raíz del documento
@@ -85,7 +90,7 @@ int main() {
     // Get root node
 
     cout << endl;
-    extractPath(&myDoc);
+    //extractPath(&myDoc);
 
     //Modificar un atributo existente
     //Modifica el atributo indicado del primer elemento <path> que se encuentre
