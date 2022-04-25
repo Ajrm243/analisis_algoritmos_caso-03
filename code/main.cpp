@@ -3,9 +3,54 @@
 #include <bits/stdc++.h>
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
-//#include "../headers/observers.hpp"
 #include "../headers/main.hpp"
-#include "Seleccion.hpp"
+#include "../headers/observers.hpp"
+#include "../headers/Seleccion.hpp"
+
+
+
+/*
+*****************
+*    GLOBALES   *
+*****************
+*/
+int frames, angulo, height, width;
+list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
+
+vector <Path> capturedPathList;
+vector <Path> selectedPathList;
+
+
+//Recorre el elemento raíz del documento
+void extractXMLData(xml_document<>* doc){
+  xml_node<>* node = doc->first_node();
+
+  cout << "Etiqueta: " << node->name() << endl;
+  for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
+    cout << " Atributo: " << attrib->name() << endl;
+    cout << "\tValor: " << attrib->value() << endl;
+  }
+
+  extractNodeData(node);
+}
+
+//Recorre el resto de elementos del documento
+void extractNodeData(xml_node<>* node){
+  for (node = node->first_node(); node != NULL; node = node->next_sibling()){
+    if (node->type() == node_element){
+      cout << "Etiqueta: " << node->name() << endl;
+
+      for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
+        cout << "\tAtributo: " << attrib->name() << endl;
+        cout << "\t-Valor: " << attrib->value() << endl;
+      }
+
+      extractNodeData(node);
+    }
+  }
+}
+
+/*
 
 //using namespace std;
 class Operator : public Subject{
@@ -37,7 +82,7 @@ class Router : public Observer {
 class Generator : public Observer {
 
 };
-
+*/
 int main() {
     //Leer XML
     file<> file("../svganimation/images/svg/wifi-2.svg"); // Lee y carga el archivo en memoria
