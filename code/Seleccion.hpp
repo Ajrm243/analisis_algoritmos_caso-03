@@ -50,7 +50,7 @@ void extractData(xml_node<>* node){
             if (etiqueta == "g") {
                 cout << "Etiqueta: " << node->name() << endl;
                 attrib = node->first_attribute("fill");
-                if (attrib != NULL){
+                if (attrib != nullptr){
                     color = attrib->value();
                     list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
                     if(findIter != lista_colores.end()) {
