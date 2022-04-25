@@ -1,8 +1,9 @@
-#include "main.hpp"
+#include "../code/main.hpp"
 
 /*
-    *****Posible acomodo de la clase Seleccion 
+    *****Posible acomodo de la clase Seleccion ******
 */
+
 class Seleccion : public Observer {
 public:
     Seleccion() {}
@@ -21,6 +22,8 @@ public:
             cout << "Analizando intersecciones de puntos con valores de paths" << endl;
     }
 } ;
+
+
 //Lista de colores dadas por el usuario
 list <string> lista_colores = {"red","yellow"};
 
@@ -77,6 +80,7 @@ void extractPath(xml_document<>* doc){
 
     extractData(node);
     }
+
 
 /*
 Analisis de los elementos del svg 
@@ -221,6 +225,6 @@ Grupos de puntos separados por un espacio
 *************************
 *     SWITCH DE CASO    *
 *************************
-    
+
 */    
 
