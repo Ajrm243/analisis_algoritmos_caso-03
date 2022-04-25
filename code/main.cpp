@@ -3,7 +3,7 @@
 #include <bits/stdc++.h>
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
-#include "../headers/observers.hpp"
+//#include "../headers/observers.hpp"
 #include "../headers/main.hpp"
 #include "Seleccion.hpp"
 
@@ -40,7 +40,7 @@ class Generator : public Observer {
 
 int main() {
     //Leer XML
-    file<> file("ejemplos_svg/EjemploSimple1.svg"); // Lee y carga el archivo en memoria
+    file<> file("../svganimation/images/svg/wifi-2.svg"); // Lee y carga el archivo en memoria
     xml_document<> myDoc; //Raíz del árbol DOM
     myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
 

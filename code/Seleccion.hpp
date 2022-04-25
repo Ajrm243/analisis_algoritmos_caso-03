@@ -29,40 +29,40 @@ list <string> lista_colores = {"red","yellow"};
 void extractData(xml_node<>* node){
     //Reconocer con base en la etiqueta del nodo si los node_element "path" y "g" --> Por el momento
     //Por el momento unicamente se estan imprimiendo hasta definir la estructura que se utilizara para almacenarlas
-    for (node = node->first_node(); node != NULL; node = node->next_sibling()){
+    for (node = node->first_node(); node != NULL; node = node->next_sibling()) {
         
         if (node->type() == node_element){
-        string etiqueta = node->name();
-        string relleno, color;
-        xml_attribute<>* attrib;
-        if (etiqueta == "path"){
+            string etiqueta = node->name();
+            string relleno, color;
+            xml_attribute<>* attrib;
+            if (etiqueta == "path"){
 
-            cout << "Etiqueta: " << node->name() << endl;
-            attrib = node->first_attribute("stroke");
-            color = attrib->value();
-            list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
-            if(findIter != lista_colores.end()){
-                //Seleccionar path para la siguiente fase de seleccion
-                cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
-            }
+                cout << "Etiqueta: " << node->name() << endl;
+                attrib = node->first_attribute("stroke");
+                color = attrib->value();
+                list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
+                if(findIter != lista_colores.end()){
+                    //Seleccionar path para la siguiente fase de seleccion
+                    cout << "Coincidencia encontrada" << endl; //Hacer el append del elemenot path
                 }
-        
-        if (etiqueta == "g")
-        {
-            cout << "Etiqueta: " << node->name() << endl;
-            attrib = node->first_attribute("fill");
-            color = attrib->value();
-            list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
-            if(findIter != lista_colores.end()){
-                //Seleccionar path para la siguiente fase de seleccion
-                cout<<"Coincidencia encontrada"<<endl;//Hacer el append del elemento path
             }
-        }
-        extractData(node);
-        }
-        
+            
+            if (etiqueta == "g") {
+                cout << "Etiqueta: " << node->name() << endl;
+                attrib = node->first_attribute("fill");
+                if (attrib != NULL){
+                    color = attrib->value();
+                    list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
+                    if(findIter != lista_colores.end()) {
+                        //Seleccionar path para la siguiente fase de seleccion
+                        cout << "Coincidencia encontrada" << endl;//Hacer el append del elemento path
+                    }
+                }
+            }
+            extractData(node);
         }
     }
+}
 
 
 void extractPath(xml_document<>* doc){
@@ -70,17 +70,16 @@ void extractPath(xml_document<>* doc){
 
     cout << "Etiqueta: " << node->name() << endl;
     cout<< node->name()<<endl;
-    for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
+    for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()) {
         //Reconocer y guardar valores del svg como el height y el width --> generar metodo get y set de ambos valores
         cout << " Atributo: " << attrib->name() << endl;
         cout << "\tValor: " << attrib->value() << endl;
     }
-
     extractData(node);
-    }
+}
 
 /*
-Analisis de los elementos del svg 
+Analisis de los elementos del svg
 
 *****************
 *   Rectangle   *
@@ -222,6 +221,4 @@ Grupos de puntos separados por un espacio
 *************************
 *     SWITCH DE CASO    *
 *************************
-
-*/    
-
+*/
