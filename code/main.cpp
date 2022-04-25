@@ -50,7 +50,7 @@ int main() {
     // Get root node
 
     cout << endl;
-    extractPath(&myDoc);
+    //extractPath(&myDoc);
 
     //Modificar un atributo existente
     //Modifica el atributo indicado del primer elemento <path> que se encuentre
