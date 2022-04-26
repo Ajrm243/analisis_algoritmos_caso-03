@@ -19,6 +19,33 @@ vector<float, float> pointsList;
 */
 using namespace std;
 
+const string pattern("([MLHVCSQTAZmlhvcsqtaz]{1})([^MLHVCSQTAZmlhvcsqtaz]+)");
+const string subPat("((\\w{1})-?(\\d+(\\.\\d{1,3})?)[,-](\\d+(\\.\\d{1,3})?))");
+const string getNumbersPattern("(,|-)");
+const string getNumbersGreedy("[^MLHVCSQTAZmlhvcsqtaz]+");
+list<string> positionsFromOnePath;
+
+
+void listMovementsFromPath(pair<double, double> pPoint, string pathCommand) {
+    cout << pathCommand << " enters" << endl;
+    cout << pPoint.first << ", " << pPoint.second << endl;
+    regex separatorRegex(getNumbersGreedy);
+    smatch separatorMatches;
+    regex_search(pathCommand, separatorMatches, separatorRegex);
+
+    char var = pathCommand.at(0);
+    string s (1, var);
+    string mValue = "M";
+    string nuevo;
+    for (sregex_iterator i = sregex_iterator(pathCommand.begin(), pathCommand.end(), separatorRegex); i != sregex_iterator(); ++i) {
+        smatch movementParameters = *i;
+        nuevo = movementParameters.str();
+        cout << nuevo << endl;
+        positionsFromOnePath.push_back(nuevo);
+    }
+    cout << endl << endl;
+}
+
 int main() {
 
     // example point list
@@ -36,13 +63,11 @@ int main() {
 
     // do magic
     string toFind = pathDescriptionList.at(0);
-    string pattern("([MLHVCSQTAZmlhvcsqtaz]{1})([^MLHVCSQTAZmlhvcsqtaz]+)");
-    string subPat("((\\w{1})-?(\\d+(\\.\\d{1,3})?)[,-](\\d+(\\.\\d{1,3})?))");
     string movementStr;
     bool copied = false;
     regex rx(pattern);
     regex subrx(subPat);
-
+    /*
     for(sregex_iterator i = sregex_iterator(toFind.begin(), toFind.end(), rx); i != sregex_iterator(); ++i) {
         smatch movement = *i;
         cout << movement.str() << " at position: " << movement.position() << endl;
@@ -54,6 +79,11 @@ int main() {
         }
         cout << "----" << endl;
     }
+    */
+    listMovementsFromPath(pointsList.at(0), pathDescriptionList.at(0));
+    //checkIntersection
+    // vaciar lista
+    
 
     return 0;
 }

@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "list": "cpp"
+        "*.html": "html",
+        "list": "cpp",
+        "ostream": "cpp"
     }
 }
