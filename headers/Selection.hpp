@@ -5,14 +5,14 @@
     *****Posible acomodo de la clase Seleccion ******
 */
 
-class Selection : public Observer {
+class Seleccion : public Observer {
 public:
-    Selection() {}
-    ~Selection() {}
+    Seleccion() {}
+    ~Seleccion() {}
 
     void update(void* procesoSeleccion) {
-        // (int*) = casting the void pointer to pointer to int
-        // *(int*) = value of the int you are pointing to
+        // (int*) = castear el puntero void a puntero a int
+        // *(int*) = valor del int al que apunta
         int value = *(int*)procesoSeleccion;
 
         if (value == 0)
@@ -27,11 +27,13 @@ public:
 extern vector <Path> capturedPathList;
 extern vector <Path> selectedPathList;
 
-//List of color given by the user
-list <string> colorList = {"red","yellow"};
+//Lista de colores dadas por el usuario
+list <string> lista_colores = {"red","yellow"};
 
-void CollectPaths(xml_node<>* node){
-    //Recognize based on the node tag if the node_element "path" --> In this moment 
+void recolectarPaths(xml_node<>* node){
+    //Reconocer con base en la etiqueta del nodo si los node_element "path" y "g" --> Por el momento
+    //Por el momento unicamente se estan imprimiendo hasta definir la estructura que se utilizara para almacenarlas
+    
     for (node = node->first_node(); node != NULL; node = node->next_sibling()){
         Path path;
         
@@ -56,16 +58,17 @@ void CollectPaths(xml_node<>* node){
 }
 
 
-void FilterColor(){
-    int indexPath;
+
+void FiltrarColor(){
+    int numeroPath;
     string color;
-    for (indexPath=0; indexPath<capturedPathList.size(); indexPath++){
-        Path path = capturedPathList.at(indexPath);
+    for (numeroPath=0; numeroPath<capturedPathList.size(); numeroPath++){
+        Path path = capturedPathList.at(numeroPath);
         color = path.getColor();
-        list<string>::iterator findIter = find(colorList.begin(), colorList.end(), color);
-            if(findIter != colorList.end()){
-                //Select path for the next selection phase
-                cout<<"Coincidencia encontrada"<<endl; //Make the append of the elemenot path
+        list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
+            if(findIter != lista_colores.end()){
+                //Seleccionar path para la siguiente fase de seleccion
+                cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
                 selectedPathList.push_back(path);
             }
     }
