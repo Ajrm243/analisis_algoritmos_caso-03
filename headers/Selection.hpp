@@ -5,6 +5,7 @@
     *****Posible acomodo de la clase Seleccion ******
 */
 
+
 class Seleccion : public Observer {
 public:
     Seleccion() {}
@@ -13,6 +14,7 @@ public:
     void update(void* procesoSeleccion) {
         // (int*) = castear el puntero void a puntero a int
         // *(int*) = valor del int al que apunta
+
         int value = *(int*)procesoSeleccion;
 
         if (value == 0)
@@ -25,6 +27,7 @@ public:
 };
 
 
+
 //Lista de colores dadas por el usuario
 list <string> colorList = {"red","yellow"};
 
@@ -34,6 +37,7 @@ void recolectarPaths(xml_node<>* node){
     
     for (node = node->first_node(); node != NULL; node = node->next_sibling()){
         Path path;
+
         if (node->type() == node_element){
         string etiqueta = node->name();
         path.setEtiqueta(etiqueta);
@@ -43,7 +47,9 @@ void recolectarPaths(xml_node<>* node){
             path.setId(idPath);
             color = node->first_attribute("opacity")->value();
             path.setColor(color);
+
             d = node->first_attribute("d")->value();
+
             path.setPath(d);
 
             capturedPathList.push_back(path);
@@ -53,6 +59,7 @@ void recolectarPaths(xml_node<>* node){
         
     }
 }
+
 
 
 
@@ -66,6 +73,7 @@ void FiltrarColor(){
             if(findIter != colorList.end()){
                 //Seleccionar path para la siguiente fase de seleccion
                 cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
+
                 selectedPathList.push_back(path);
             }
     }
@@ -74,7 +82,9 @@ void FiltrarColor(){
 
 /*
 
+
 Analisis de los elementos del svg 
+
 
 *****************
 *   Rectangle   *
@@ -82,11 +92,15 @@ Analisis de los elementos del svg
 Manera1
 <rect x="10" y="10" width="30" height="30"/>
 
+
+
 Manera2
 <rect x="60" y="10" rx="10" ry="10" width="30" height="30"/>
 
 Manera3
 <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+
+
 
 
 *****************
@@ -96,11 +110,17 @@ Manera1
 <circle cx="25" cy="75" r="20" fill="red"/>    --> r=radio, cy & cx punto central del circulo
 
 
+
+
+
+
 *****************
 *    Ellipse    *
 *****************
 Manera1
 <ellipse cx="75" cy="75" rx="20" ry="5"/>
+
+
 
 Manera2
  <ellipse cx="200" cy="80" rx="100" ry="50" style="fill:yellow;stroke:purple;stroke-width:2" />  --> etiqueta "style" para relleno
@@ -110,11 +130,17 @@ Manera2
     -cx & cy = punto central del elipse
 
 
+
+
+
 *****************
 *      Line     *
 *****************
 Manera1
 <line x1="10" x2="50" y1="110" y2="150" stroke="black" stroke-width="5"/>
+
+
+
 
 
 *****************
@@ -123,7 +149,10 @@ Manera1
 Manera1
 <polygon points="200,10 250,190 160,210" style="fill:lime;stroke:purple;stroke-width:1" />
 
+
+
 Grupos de puntos separados por un espacio
+
 
 
 *****************
@@ -132,7 +161,10 @@ Grupos de puntos separados por un espacio
 Manera1
 <polyline points="60, 110 65, 120 70, 115 75, 130 80, 125 85, 140 90, 135 95, 150 100, 145"/>
 
+
+
 Grupos de puntos separados por un espacio
+
 
 
 *****************
@@ -141,11 +173,15 @@ Grupos de puntos separados por un espacio
     @ AYUDA 
         Visualizador de paths = https://svg-path-visualizer.netlify.app/
 
+
+
     Atributo a buscar = "d"  --> define el trazado que va a dibujarse
 
     Comandos de ruta de acceso:
 
             ~MOVE TO  (M, m):
+
+
 
                 M = M 250 50 
                     Coordenadas donde empieza el trazado.
@@ -154,6 +190,8 @@ Grupos de puntos separados por un espacio
                     largo del eje x y a lo largo del eje y"
             
             ~LINE TO (L,l,H,h,V,v):
+
+
 
                 L, V, H --> Utilizan coordenadas absolutas
 
@@ -166,18 +204,24 @@ Grupos de puntos separados por un espacio
                 H = H 50
                     Mover horizontalmente a 50
 
+
+
                 l,v,h --> utilizan coordenadas relativas
                 
                 L = L 80,80
                     Coloque el bolígrafo y mueva a la derecha 80 y 80 inferior desde la posición actual
 
+
                 V = V -80
                     Mover el top 80 de la posición actual
+
 
                 H = H -40
                     Mover a la izquierda 40 de la posición actual
             
             ~Curva cúbica de Bézier (C,c,S,s):
+
+
 
                 C & S --> Utilizan coordenadas absolutas
 
@@ -192,10 +236,14 @@ Grupos de puntos separados por un espacio
                 c = c 20,0 15,-80 40,-80
                     Coloque el lápiz y dibuje una curva de Bézier desde el punto actual hasta un nuevo punto { x: punto anterior + 40, y: punto anterior - 80 }
 
+
+
                 s = s 20,80 40,80
                     Dibujar una curva de Bézier suave desde el punto actual hasta un nuevo punto { x: punto anterior + 40, y: punto anterior + 80 }
                     
             ~Curva cuadrática de Bézier (Q,q, T,t):
+
+
 
                 Q & T --> Utilizan coordenadas absolutas
 
@@ -207,10 +255,14 @@ Grupos de puntos separados por un espacio
 
                 q & t --> Utilizan coordenadas relativas
 
+
+
                 t 30,0 30,0 30,0 30,0 30,0
                 t 30,0
                 Dibujar una curva de Bézier cuadrática desde el punto actual hasta un nuevo punto { x: punto anterior + 30, y: punto anterior + 0 }
                 El punto de control es el reflejo del punto de control final del comando de curva anterior
+
+
 
 
 *************************
