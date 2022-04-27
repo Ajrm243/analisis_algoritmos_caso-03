@@ -17,4 +17,3 @@ using namespace rapidxml; //Namespace de la librería
 void extractXMLData(xml_document<>* doc);
 
 void extractNodeData(xml_node<>* node);
-

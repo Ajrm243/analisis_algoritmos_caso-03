@@ -5,14 +5,16 @@
     *****Posible acomodo de la clase Seleccion ******
 */
 
-class Selection : public Observer {
+
+class Seleccion : public Observer {
 public:
-    Selection() {}
-    ~Selection() {}
+    Seleccion() {}
+    ~Seleccion() {}
 
     void update(void* procesoSeleccion) {
-        // (int*) = casting the void pointer to pointer to int
-        // *(int*) = value of the int you are pointing to
+        // (int*) = castear el puntero void a puntero a int
+        // *(int*) = valor del int al que apunta
+
         int value = *(int*)procesoSeleccion;
 
         if (value == 0)
@@ -24,17 +26,18 @@ public:
     }
 };
 
-extern vector <Path> capturedPathList;
-extern vector <Path> selectedPathList;
 
-//List of color given by the user
+
+//Lista de colores dadas por el usuario
 list <string> colorList = {"red","yellow"};
 
-void CollectPaths(xml_node<>* node){
-    //Recognize based on the node tag if the node_element "path" --> In this moment 
+void recolectarPaths(xml_node<>* node){
+    //Reconocer con base en la etiqueta del nodo si los node_element "path" y "g" --> Por el momento
+    //Por el momento unicamente se estan imprimiendo hasta definir la estructura que se utilizara para almacenarlas
+    
     for (node = node->first_node(); node != NULL; node = node->next_sibling()){
         Path path;
-        
+
         if (node->type() == node_element){
         string etiqueta = node->name();
         path.setEtiqueta(etiqueta);
@@ -44,7 +47,9 @@ void CollectPaths(xml_node<>* node){
             path.setId(idPath);
             color = node->first_attribute("opacity")->value();
             path.setColor(color);
-            d =  node->first_attribute("d")->value();
+
+            d = node->first_attribute("d")->value();
+
             path.setPath(d);
 
             capturedPathList.push_back(path);
@@ -56,16 +61,19 @@ void CollectPaths(xml_node<>* node){
 }
 
 
-void FilterColor(){
-    int indexPath;
+
+
+void FiltrarColor(){
+    int pathNumber;
     string color;
-    for (indexPath=0; indexPath<capturedPathList.size(); indexPath++){
-        Path path = capturedPathList.at(indexPath);
+    for (pathNumber=0; pathNumber<capturedPathList.size(); pathNumber++){
+        Path path = capturedPathList.at(pathNumber);
         color = path.getColor();
         list<string>::iterator findIter = find(colorList.begin(), colorList.end(), color);
             if(findIter != colorList.end()){
-                //Select path for the next selection phase
-                cout<<"Coincidencia encontrada"<<endl; //Make the append of the elemenot path
+                //Seleccionar path para la siguiente fase de seleccion
+                cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
+
                 selectedPathList.push_back(path);
             }
     }
@@ -85,11 +93,13 @@ Manera1
 <rect x="10" y="10" width="30" height="30"/>
 
 
+
 Manera2
 <rect x="60" y="10" rx="10" ry="10" width="30" height="30"/>
 
 Manera3
 <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
+
 
 
 
@@ -101,12 +111,15 @@ Manera1
 
 
 
->>>>>>> main
+
+
+
 *****************
 *    Ellipse    *
 *****************
 Manera1
 <ellipse cx="75" cy="75" rx="20" ry="5"/>
+
 
 
 Manera2
@@ -117,7 +130,9 @@ Manera2
     -cx & cy = punto central del elipse
 
 
->>>>>>> main
+
+
+
 *****************
 *      Line     *
 *****************
@@ -126,7 +141,8 @@ Manera1
 
 
 
->>>>>>> main
+
+
 *****************
 *    Polygon    *
 *****************
@@ -134,10 +150,11 @@ Manera1
 <polygon points="200,10 250,190 160,210" style="fill:lime;stroke:purple;stroke-width:1" />
 
 
+
 Grupos de puntos separados por un espacio
 
 
->>>>>>> main
+
 *****************
 *    Polyline   *
 *****************
@@ -145,15 +162,17 @@ Manera1
 <polyline points="60, 110 65, 120 70, 115 75, 130 80, 125 85, 140 90, 135 95, 150 100, 145"/>
 
 
+
 Grupos de puntos separados por un espacio
 
 
->>>>>>> main
+
 *****************
 *      Path     *
 *****************
     @ AYUDA 
         Visualizador de paths = https://svg-path-visualizer.netlify.app/
+
 
 
     Atributo a buscar = "d"  --> define el trazado que va a dibujarse
@@ -163,6 +182,7 @@ Grupos de puntos separados por un espacio
             ~MOVE TO  (M, m):
 
 
+
                 M = M 250 50 
                     Coordenadas donde empieza el trazado.
                 m = m  0,10
@@ -170,6 +190,7 @@ Grupos de puntos separados por un espacio
                     largo del eje x y a lo largo del eje y"
             
             ~LINE TO (L,l,H,h,V,v):
+
 
 
                 L, V, H --> Utilizan coordenadas absolutas
@@ -182,6 +203,7 @@ Grupos de puntos separados por un espacio
 
                 H = H 50
                     Mover horizontalmente a 50
+
 
 
                 l,v,h --> utilizan coordenadas relativas
@@ -200,6 +222,7 @@ Grupos de puntos separados por un espacio
             ~Curva cúbica de Bézier (C,c,S,s):
 
 
+
                 C & S --> Utilizan coordenadas absolutas
 
                 C = C 30,90 25,10 50,10
@@ -214,10 +237,12 @@ Grupos de puntos separados por un espacio
                     Coloque el lápiz y dibuje una curva de Bézier desde el punto actual hasta un nuevo punto { x: punto anterior + 40, y: punto anterior - 80 }
 
 
+
                 s = s 20,80 40,80
                     Dibujar una curva de Bézier suave desde el punto actual hasta un nuevo punto { x: punto anterior + 40, y: punto anterior + 80 }
                     
             ~Curva cuadrática de Bézier (Q,q, T,t):
+
 
 
                 Q & T --> Utilizan coordenadas absolutas
@@ -229,6 +254,7 @@ Grupos de puntos separados por un espacio
                 
 
                 q & t --> Utilizan coordenadas relativas
+
 
 
                 t 30,0 30,0 30,0 30,0 30,0
