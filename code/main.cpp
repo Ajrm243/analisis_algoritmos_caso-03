@@ -1,6 +1,5 @@
-#include <iostream>
+##include <iostream>
 #include <list>
-#include <bits/stdc++.h>
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/main.hpp"
