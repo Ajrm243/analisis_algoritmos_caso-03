@@ -1,22 +1,23 @@
-#include <iostream>
+##include <iostream>
 #include <list>
-//#include <bits/stdc++.h>
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/main.hpp"
-#include "../headers/observers.hpp"
-#include "../headers/Seleccion.hpp"
+#include "../headers/Observer.hpp"
+#include "../headers/Selection.hpp"
+
 
 
 /*
 *****************
-*     GLOBAL    *
+*    GLOBALES   *
 *****************
 */
 int frames, angulo, height, width;
 list <xml_node<>* > selected_paths; //Unicamente agregar los node_element con etiquetas"path" y/o "g"
 
-
+vector <Path> capturedPathList;
+vector <Path> selectedPathList;
 
 
 //Recorre el elemento raíz del documento
@@ -75,9 +76,8 @@ int main() {
     myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
 
     //Recorrer elementos y atributos
-    xml_node<> *root = myDoc.first_node("g");
-
-    CollectPaths(root);
+    //extractXMLData(&myDoc);
+    xml_node<> *root = myDoc.first_node("svg");
     // Get root node
 
     cout << endl;

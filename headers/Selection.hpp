@@ -1,5 +1,5 @@
 #include "../headers/main.hpp"
-#include "../headers/observers.hpp"
+#include "../headers/Observer.hpp"
 
 /*
     *****Posible acomodo de la clase Seleccion ******
