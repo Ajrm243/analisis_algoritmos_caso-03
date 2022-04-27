@@ -24,11 +24,9 @@ public:
     }
 };
 
-extern vector <Path> capturedPathList;
-extern vector <Path> selectedPathList;
 
 //Lista de colores dadas por el usuario
-list <string> lista_colores = {"red","yellow"};
+list <string> colorList = {"red","yellow"};
 
 void recolectarPaths(xml_node<>* node){
     //Reconocer con base en la etiqueta del nodo si los node_element "path" y "g" --> Por el momento
@@ -36,7 +34,6 @@ void recolectarPaths(xml_node<>* node){
     
     for (node = node->first_node(); node != NULL; node = node->next_sibling()){
         Path path;
-        
         if (node->type() == node_element){
         string etiqueta = node->name();
         path.setEtiqueta(etiqueta);
@@ -46,7 +43,7 @@ void recolectarPaths(xml_node<>* node){
             path.setId(idPath);
             color = node->first_attribute("opacity")->value();
             path.setColor(color);
-            d =  node->first_attribute("d")->value();
+            d = node->first_attribute("d")->value();
             path.setPath(d);
 
             capturedPathList.push_back(path);
@@ -60,13 +57,13 @@ void recolectarPaths(xml_node<>* node){
 
 
 void FiltrarColor(){
-    int numeroPath;
+    int pathNumber;
     string color;
-    for (numeroPath=0; numeroPath<capturedPathList.size(); numeroPath++){
-        Path path = capturedPathList.at(numeroPath);
+    for (pathNumber=0; pathNumber<capturedPathList.size(); pathNumber++){
+        Path path = capturedPathList.at(pathNumber);
         color = path.getColor();
-        list<string>::iterator findIter = find(lista_colores.begin(), lista_colores.end(), color);
-            if(findIter != lista_colores.end()){
+        list<string>::iterator findIter = find(colorList.begin(), colorList.end(), color);
+            if(findIter != colorList.end()){
                 //Seleccionar path para la siguiente fase de seleccion
                 cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
                 selectedPathList.push_back(path);
