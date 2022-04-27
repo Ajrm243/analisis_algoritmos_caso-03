@@ -10,7 +10,7 @@
 
 /*
 *****************
-*    GLOBALES   *
+*     GLOBAL    *
 *****************
 */
 int frames, angulo, height, width;
@@ -75,10 +75,9 @@ int main() {
     myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
 
     //Recorrer elementos y atributos
-    //extractXMLData(&myDoc);
     xml_node<> *root = myDoc.first_node("g");
 
-    recolectarPaths(root);
+    CollectPaths(root);
     // Get root node
 
     cout << endl;
