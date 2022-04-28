@@ -64,6 +64,10 @@ void checkIntersections() {
     }
 }
 
+void checkTest() {
+    
+}
+
 int main() {
 
     // example point list
