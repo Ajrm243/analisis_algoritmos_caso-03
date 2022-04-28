@@ -1,6 +1,8 @@
+
 #include <iostream>
 #include <list>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
+
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/main.hpp"
@@ -51,36 +53,23 @@ void extractNodeData(xml_node<>* node){
 }
 
 /*
-
 //using namespace std;
 class Operator : public Subject{
-
     private:
     std::list<Observer*> ObserverList;
-
     public:
-
     void attach(Observer* pObserver) {
         ObserverList.push_back(pObserver);
     }
-
     void detach(Observer* pObserver) {
         ObserverList.remove(pObserver);
     }
-
 };
-
-
 class Selector : public Observer {
-
 };
-
 class Router : public Observer {
-
 };
-
 class Generator : public Observer {
-
 };
 */
 int main() {
