@@ -1,7 +1,7 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 #include <regex>
 #include <vector>
 #include <utility>
