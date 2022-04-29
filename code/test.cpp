@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <cmath>
 /*
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
@@ -28,6 +29,11 @@ list<string> positionsFromOnePath;
 vector<pair<double, double>> pointsList;
 vector<string> pathDescriptionList;
 
+double canvasHeight = 5000;
+double canvasWidth = 4129.539;
+double ratio = (canvasWidth / canvasHeight) * 50.5; // la idea es que sea una constante a drede que nos ayude a proporcionar más matches o menos según queramos
+
+
 void listMovementsFromPath(string pPathCommand) {
     cout << pPathCommand << " enters" << endl;
     regex separatorRegex(getNumbersGreedy);
@@ -45,27 +51,19 @@ void listMovementsFromPath(string pPathCommand) {
     //cout << endl << endl;
 }
 
-void checkIntersections() {
-    regex pathPointsSeparatorRegex;
-    smatch separatedPathPoints;
-    list<double> currentPathPoints;
-    for (pair<double, double> point : pointsList) {
-        switch (positionsFromOnePath.size()) {
-            case 1: {}
-            case 2: {
-                
-            }
-            case 4: {}
-            case 6: {}
-            default: {
-                break;
-            }
-        }
-    }
+void splitStringIntoList(string pStr, string pDelimiter, pair<double, double>& pPathPoint) {
+    // solo toma 2 elementos
+    int start = 0;
+    int end = pStr.find(pDelimiter);
+    pPathPoint.first = stod(pStr.substr(start, end - start));
+    start = end + pDelimiter.size();
+    end = pStr.find(pDelimiter, start);
+    pPathPoint.second = stod(pStr.substr(start, end - start));
 }
 
-void checkTest() {
-    
+bool checkProximityBetweenPoints(pair<double, double> pUserPoint, pair<double, double> pPathPoint) {
+    double distance = sqrt( pow((pUserPoint.first - pPathPoint.first), 2) + pow((pUserPoint.second - pPathPoint.second), 2) );
+    return distance <= ratio;
 }
 
 int main() {
@@ -74,7 +72,8 @@ int main() {
     pointsList = {
         {1,1},
         {2,2},
-        {3,3}
+        {3,3},
+        {1980, 15}
     };
     // example path d list
     pathDescriptionList = {
@@ -83,38 +82,26 @@ int main() {
         "M2035.019,22.756h2.626v-9.065l-2.857,0.573v-1.464c3.412-0.688,2.424-0.573,4.449-0.573v10.529h2.626v1.353h-6.844V22.756z"
     };
 
-    // do magic
-    string toFind = pathDescriptionList.at(0);
-    string movementStr;
-    bool copied = false;
-    regex rx(pattern);
-    regex subrx(subPat);
-    /*
-    for(sregex_iterator i = sregex_iterator(toFind.begin(), toFind.end(), rx); i != sregex_iterator(); ++i) {
-        smatch movement = *i;
-        cout << movement.str() << " at position: " << movement.position() << endl;
-        smatch coordinates;
-        movementStr = movement.str();
-        regex_search(movementStr, coordinates, subrx);
-        for (auto coord : coordinates) {
-            cout << coord << endl;
+    string test = "M1945.305,19.063c1023.10,0";
+    string p = "[A-Za-z](.*)[A-Za-z]";
+    regex testReg = regex(p, regex_constants::ECMAScript);
+    smatch testMatches;
+    string pointValues;
+
+    for (string path : pathDescriptionList) {
+        regex_search(path, testMatches, testReg);
+        pointValues = string(testMatches[1]);
+        pair<double, double> pathSearchPoint;
+        splitStringIntoList(pointValues, ",", pathSearchPoint);
+        cout << "Path to Search: " << pathSearchPoint.first << ", " << pathSearchPoint.second << endl;
+        for (pair<double, double> userPoint : pointsList) {
+            cout << "Point to Search: " << userPoint.first << ", " << userPoint.second << endl;
+            if(checkProximityBetweenPoints(userPoint, pathSearchPoint)){
+                cout << "(" + to_string(userPoint.first) + ", " + to_string(userPoint.second) + ") found a match!" << endl;
+            }
         }
-        cout << "----" << endl;
+
     }
-   */
-
-    for (string pathDescription : pathDescriptionList) {
-        listMovementsFromPath(pathDescription);
-        checkIntersections();
-        pathDescriptionList.clear();
-    }
-
-    
-
-
-    //listMovementsFromPath(pointsList.at(0), pathDescriptionList.at(0));
-    // checkIntersection
-    // vaciar lista
 
 
     return 0;
