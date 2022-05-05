@@ -10,7 +10,226 @@
 using namespace std;
 vector<string> pathDescriptionList;
 
+/*
+*************************************************ENRUTAMIENTO*************************************************************
+*/
 
+
+double radianesAGrados(double radianes)
+{
+  double PI = 2 * acos(0.0);
+  return radianes * 180 / PI;
+}
+/*
+vector<Path> Routing(vector<Path> selected_paths, double width, double height, double degree ){
+
+ return 0;
+}
+*/
+
+
+vector<pair<double, double>> FirstQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){ //From 0 to 90 degree angle
+  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función 
+  double x0= width;
+  double y0=yInicial;
+  double xMovements, yMovements;
+
+  double distance;
+
+  distance = degree;
+
+
+  yFinal = yInicial + distance;
+  double discountX;
+
+  if (yFinal> heigth){
+    discountX = yFinal-heigth;
+    yFinal-=discountX;
+
+    xFinal = abs( discountX - x0 );
+
+  }
+
+  else{
+    xFinal = width;
+  }
+  xMovements = (heigth - xInicial);
+  xMovements=xMovements/numFrames; //Set value into xMovements
+
+  yMovements = (yFinal-yInicial);
+  yMovements = yMovements/numFrames; //Set value into yMovements
+
+  vector<pair<double, double>> linearMovementPoints;
+  double xChanges = xInicial;
+  double yChanges = yInicial;
+  pair <double, double> MovementPoint;
+  while(numFrames>0){
+    xChanges = xChanges +xMovements;
+    yChanges = yChanges +yMovements;
+    MovementPoint.first = xChanges;
+    MovementPoint.second = yChanges;
+    cout<< xChanges <<" , "<<yChanges<<endl;
+    linearMovementPoints.push_back(MovementPoint);
+    numFrames --;
+  }
+
+  return linearMovementPoints;
+}
+vector<pair<double, double>> SecondQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){//From 90 to 180 degree angle
+  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función
+  double x90= xInicial;
+  double y90=heigth;
+  double xMovements, yMovements;
+
+  double distance;
+
+  distance = abs(90-degree);
+
+  xFinal = xInicial + distance;
+  double discountY;
+
+  if (xFinal> width){
+    discountY = xFinal-width;
+    xFinal-=discountY;
+
+    yFinal = abs( discountY - y90 );
+  }
+
+  else{
+    yFinal = heigth;
+  }
+
+  xMovements = (heigth - xInicial);
+  xMovements=xMovements/numFrames; //Set value into xMovements
+
+  yMovements = (yFinal-yInicial);
+  yMovements = yMovements/numFrames; //Set value into yMovements
+
+  vector<pair<double, double>> linearMovementPoints;
+  double xChanges = xInicial;
+  double yChanges = yInicial;
+  pair <double, double> MovementPoint;
+  while(numFrames>0){
+    xChanges = xChanges +xMovements;
+    yChanges = yChanges +yMovements;
+    MovementPoint.first = xChanges;
+    MovementPoint.second = yChanges;
+    cout<< xChanges <<" , "<<yChanges<<endl;
+    linearMovementPoints.push_back(MovementPoint);
+    numFrames --;
+  }
+
+  return linearMovementPoints;
+
+}
+vector<pair<double, double>> ThridQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){//From 180 to 270 degree angle
+  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función 
+  double x180= width;
+  double y180=yInicial;
+  double xMovements, yMovements;
+
+  double distance;
+
+  distance = abs(180-degree);
+
+
+  yFinal = yInicial + distance;
+  double discountX;
+
+  if (yFinal> heigth){
+    discountX = yFinal-heigth;
+    yFinal-=discountX;
+
+    xFinal = abs( discountX - x180 );
+
+  }
+
+  else{
+    xFinal = width;
+  }
+  xMovements = (heigth - xInicial);
+  xMovements=xMovements/numFrames; //Set value into xMovements
+
+  yMovements = (yFinal-yInicial);
+  yMovements = yMovements/numFrames; //Set value into yMovements
+
+  vector<pair<double, double>> linearMovementPoints;
+  double xChanges = xInicial;
+  double yChanges = yInicial;
+  pair <double, double> MovementPoint;
+  while(numFrames>0){
+    xChanges = xChanges +xMovements;
+    yChanges = yChanges +yMovements;
+    MovementPoint.first = xChanges;
+    MovementPoint.second = yChanges;
+    cout<< xChanges <<" , "<<yChanges<<endl;
+    linearMovementPoints.push_back(MovementPoint);
+    numFrames --;
+  }
+
+  return linearMovementPoints;
+}
+vector<pair<double, double>> FourthQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){//From 270 to 360 degree angle
+  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función
+  double x270= xInicial;
+  double y270=heigth;
+  double xMovements, yMovements;
+
+  double distance;
+
+  distance = abs(270-degree);
+  xFinal = xInicial + distance;
+  double discountY;
+
+  if (xFinal> width){
+    discountY = xFinal-width;
+    xFinal-=discountY;
+
+    yFinal = abs( discountY - y270 );
+  }
+
+  else{
+    yFinal = heigth;
+  }
+
+  xMovements = (heigth - xInicial);
+  xMovements=xMovements/numFrames; //Set value into xMovements
+
+  yMovements = (yFinal-yInicial);
+  yMovements = yMovements/numFrames; //Set value into yMovements
+
+  vector<pair<double, double>> linearMovementPoints;
+  double xChanges = xInicial;
+  double yChanges = yInicial;
+  pair <double, double> MovementPoint;
+  while(numFrames>0){
+    xChanges = xChanges +xMovements;
+    yChanges = yChanges +yMovements;
+    MovementPoint.first = xChanges;
+    MovementPoint.second = yChanges;
+    cout<< xChanges <<" , "<<yChanges<<endl;
+    linearMovementPoints.push_back(MovementPoint);
+    numFrames --;
+  }
+
+  return linearMovementPoints;
+}
+
+void LineMovements(double distancia, double xInicial, double yInicial, double xFinal, double yFinal, double numFrames, double xMovements, double yMovements){ //Receives also the path to use getters and setters
+  vector<pair<double, double>> linearMovementPoints;
+  double xChanges, yChanges;
+  pair <double, double> MovementPoint;
+  while(numFrames>0){
+    xChanges = xChanges +xMovements;
+    yChanges = yChanges +yMovements;
+    MovementPoint.first = xChanges;
+    MovementPoint.second = yChanges;
+    
+    linearMovementPoints.push_back(MovementPoint);
+  }
+  //When al the sums are done we set the value for linearMovementPoints
+
+}
 
 int main() {
 
