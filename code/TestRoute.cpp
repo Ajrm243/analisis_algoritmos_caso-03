@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include "../headers/Path.hpp"
 
 using namespace std;
 vector<string> pathDescriptionList;
@@ -229,6 +230,71 @@ void LineMovements(double distancia, double xInicial, double yInicial, double xF
   }
   //When al the sums are done we set the value for linearMovementPoints
 
+}
+void CombineRouting(vector<Path> selectedPathList, int start, int middlePoint, int end ){
+//Conquer phase of the algorithm
+  vector<Path> temporarySortedPath(end-start +1);
+
+  int copyStart = start;
+  int copyMiddlePoint = middlePoint +1;
+  int mergeInsertionIndex = 0;
+
+  while(copyStart <= middlePoint && copyMiddlePoint <= end){ //When both sides of the vector still have paths to compare
+    pair<double,double> LeftSortIntersection = selectedPathList[copyStart].getIntersectionPoint();
+    double xIntersectLeft = LeftSortIntersection.first;
+
+    pair<double,double> rigthSortIntercetion = selectedPathList[copyMiddlePoint].getIntersectionPoint();
+    double xIntersectRigth = rigthSortIntercetion.first;
+
+    if(xIntersectLeft <= xIntersectRigth){
+      temporarySortedPath[mergeInsertionIndex++] = selectedPathList[copyStart++];
+      //copyStart++;
+      //mergeInsertionIndex++;
+    }
+    else{
+      temporarySortedPath[mergeInsertionIndex++] = selectedPathList[copyMiddlePoint++];
+    }
+  }
+  //If the right sub-group has run out of values
+  // Then add the rest of the values from the left side into the result
+  while(copyStart <= middlePoint){
+    temporarySortedPath[mergeInsertionIndex] = selectedPathList[copyStart];
+    mergeInsertionIndex++, copyStart++;
+  }
+  //If the left sub-group has run out of values
+  //then add the rest of the values from the rigth side into the result
+  while(copyMiddlePoint <= end){
+    temporarySortedPath[mergeInsertionIndex] = selectedPathList[copyMiddlePoint];
+    mergeInsertionIndex++, copyMiddlePoint++;
+  }
+ //Merge Phase for the algoritm
+ //Overwrite the original selectedPathList
+  for( int indexMerge = start; indexMerge <= end; indexMerge++ ){
+    selectedPathList[indexMerge] = temporarySortedPath[indexMerge - start];
+  }
+
+  }
+  
+//Divide and Conquer approach 
+void Routing(vector<Path> selectedPathList, int start, int end){
+  if(start <end){
+    int middlePoint = (start + end)/2;
+    //Divide phase of the algorithm
+    Routing(selectedPathList, start, middlePoint); //Analice left side of the vector with the paths
+    Routing(selectedPathList,middlePoint +1, end); //Analice right side of the vector with the paths
+  
+    CombineRouting(selectedPathList,start,middlePoint,end); 
+  }
+  
+}
+
+
+
+void PrintVector(vector<Path> ejemplo){
+  for(int i=0;i<ejemplo.size();i++){
+    pair <double,double> interseccion = ejemplo[i].getIntersectionPoint();
+    cout<<interseccion.first<<endl;
+  }
 }
 
 int main() {
