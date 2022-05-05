@@ -32,6 +32,7 @@ public:
 list <string> colorList = {"red","yellow"};
 
 void CollectPaths(xml_node<>* node){
+    vector <Path> capturedPathList;
     //Recognize based on the node tag if the node_element "path" and "g" --> At the moment
     //At the moment they are only being printed until defining the structure that will be used to store them
     
@@ -62,23 +63,76 @@ void CollectPaths(xml_node<>* node){
 
 
 
+bool RGBMatch(vector< vector<int> > colorList, vector<int> colorComparar){
+  bool matchRangeColor = false;
 
-void ColorFilter(){
+  for(int i = 0; colorList.size(); i++){
+    int redDiference = abs(colorComparar[0] - colorList[i][0]);
+    int blueDiference = abs(colorComparar[0] - colorList[i][0]);
+    int greenDiference = abs(colorComparar[0] - colorList[i][0]);        
+
+    if (redDiference <= 30 && blueDiference <= 30 && greenDiference <=30){
+      matchRangeColor = true;
+      break;
+    }
+
+  }
+  return matchRangeColor;
+}
+int hexadecimalToDecimal(string hexVal)
+{
+    int len = hexVal.size();
+    // Initializing base value to 1, i.e 16^0
+    int base = 1;
+    int dec_val = 0;
+
+    for (int i = len - 1; i >= 0; i--) {
+
+        if (hexVal[i] >= '0' && hexVal[i] <= '9') {
+            dec_val += (int(hexVal[i]) - 48) * base;
+
+            base = base * 16;
+        }
+
+        else if (hexVal[i] >= 'A' && hexVal[i] <= 'F') {
+            dec_val += (int(hexVal[i]) - 55) * base;
+ 
+            base = base * 16;
+        }
+    }
+    return dec_val;
+}
+vector<int> RGBConverter(string hexValue){
+  int r,g,b;
+  string subR = (hexValue.substr(1,2));
+  r = hexadecimalToDecimal(subR);
+  string subG = (hexValue.substr(2,2));
+  g = hexadecimalToDecimal(subG);
+  string subB = (hexValue.substr(5,2));
+  b = hexadecimalToDecimal(subB);
+
+  cout<<"Sub R "<<subR<<endl;
+  cout<<"Sub G "<<subG<<endl;
+  cout<<"Sub B "<<subB<<endl;
+
+  return {r,g,b};
+}
+
+void ColorFilter(vector<Path> capturedPathList, vector <vector<int>> colorList){
     int pathNumber;
     string color;
+    vector <Path> filteredPaths;
     for (pathNumber=0; pathNumber<capturedPathList.size(); pathNumber++){
         Path path = capturedPathList.at(pathNumber);
         color = path.getColor();
-        list<string>::iterator findIter = find(colorList.begin(), colorList.end(), color);
-            if(findIter != colorList.end()){
-                //Select path for the next selection phase
-                cout<<"Coincidencia encontrada"<<endl; //Make the append of the elemenot path
+        vector<int> rgbValues = RGBConverter(color);
 
-                selectedPathList.push_back(path);
-            }
+        bool matchDetected = RGBMatch(colorList,rgbValues);
+        if (matchDetected){
+            filteredPaths.push_back(path);
+          }
     }
 }
-
 
 /*
 
