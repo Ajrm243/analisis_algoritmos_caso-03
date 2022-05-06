@@ -14,6 +14,8 @@ class Path {
     string heightSVG;
     string widthSVG;
 
+    pair<double,double> intersectionPoint;
+    vector<pair<double,double>> linearMovement;
   public:
     
     Path() { }//Constructor con parametros
@@ -48,4 +50,10 @@ class Path {
     void setWidth(string s) {widthSVG = s;}
     // Getter Width
     string getWidth() {return widthSVG;}
+    
+    void setIntersectionPoint(pair<double,double> intersection){intersectionPoint = intersection;}
+    pair<double,double> getIntersectionPoint(){return intersectionPoint;}
+
+    void setLinearMovements(vector<pair<double,double>> Movements){linearMovement = Movements;}
+    vector<pair<double,double>> getLinearMovement(){return linearMovement;}
 };

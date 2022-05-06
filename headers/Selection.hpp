@@ -6,16 +6,16 @@
 */
 
 
-class Seleccion : public Observer {
+class Selection : public Observer {
 public:
-    Seleccion() {}
-    ~Seleccion() {}
+    Selection() {}
+    ~Selection() {}
 
-    void update(void* procesoSeleccion) {
+    void update(void* selectionProcess) {
         // (int*) = castear el puntero void a puntero a int
         // *(int*) = valor del int al que apunta
 
-        int value = *(int*)procesoSeleccion;
+        int value = *(int*)selectionProcess;
 
         if (value == 0)
             cout << "Recolectando elementos paths" << endl;
@@ -31,18 +31,19 @@ public:
 //Lista de colores dadas por el usuario
 list <string> colorList = {"red","yellow"};
 
-void recolectarPaths(xml_node<>* node){
-    //Reconocer con base en la etiqueta del nodo si los node_element "path" y "g" --> Por el momento
-    //Por el momento unicamente se estan imprimiendo hasta definir la estructura que se utilizara para almacenarlas
+void CollectPaths(xml_node<>* node){
+    vector <Path> capturedPathList;
+    //Recognize based on the node tag if the node_element "path" and "g" --> At the moment
+    //At the moment they are only being printed until defining the structure that will be used to store them
     
     for (node = node->first_node(); node != NULL; node = node->next_sibling()){
         Path path;
 
         if (node->type() == node_element){
-        string etiqueta = node->name();
-        path.setEtiqueta(etiqueta);
+        string label = node->name();
+        path.setEtiqueta(label);
         string d, color, idPath;
-        if (etiqueta == "path"){
+        if (label == "path"){
             idPath = node->first_attribute("id")->value();
             path.setId(idPath);
             color = node->first_attribute("opacity")->value();
@@ -62,23 +63,76 @@ void recolectarPaths(xml_node<>* node){
 
 
 
+bool RGBMatch(vector< vector<int> > colorList, vector<int> colorComparar){
+  bool matchRangeColor = false;
 
-void FiltrarColor(){
+  for(int i = 0; colorList.size(); i++){
+    int redDiference = abs(colorComparar[0] - colorList[i][0]);
+    int blueDiference = abs(colorComparar[0] - colorList[i][0]);
+    int greenDiference = abs(colorComparar[0] - colorList[i][0]);        
+
+    if (redDiference <= 30 && blueDiference <= 30 && greenDiference <=30){
+      matchRangeColor = true;
+      break;
+    }
+
+  }
+  return matchRangeColor;
+}
+int hexadecimalToDecimal(string hexVal)
+{
+    int len = hexVal.size();
+    // Initializing base value to 1, i.e 16^0
+    int base = 1;
+    int dec_val = 0;
+
+    for (int i = len - 1; i >= 0; i--) {
+
+        if (hexVal[i] >= '0' && hexVal[i] <= '9') {
+            dec_val += (int(hexVal[i]) - 48) * base;
+
+            base = base * 16;
+        }
+
+        else if (hexVal[i] >= 'A' && hexVal[i] <= 'F') {
+            dec_val += (int(hexVal[i]) - 55) * base;
+ 
+            base = base * 16;
+        }
+    }
+    return dec_val;
+}
+vector<int> RGBConverter(string hexValue){
+  int r,g,b;
+  string subR = (hexValue.substr(1,2));
+  r = hexadecimalToDecimal(subR);
+  string subG = (hexValue.substr(2,2));
+  g = hexadecimalToDecimal(subG);
+  string subB = (hexValue.substr(5,2));
+  b = hexadecimalToDecimal(subB);
+
+  cout<<"Sub R "<<subR<<endl;
+  cout<<"Sub G "<<subG<<endl;
+  cout<<"Sub B "<<subB<<endl;
+
+  return {r,g,b};
+}
+
+void ColorFilter(vector<Path> capturedPathList, vector <vector<int>> colorList){
     int pathNumber;
     string color;
+    vector <Path> filteredPaths;
     for (pathNumber=0; pathNumber<capturedPathList.size(); pathNumber++){
         Path path = capturedPathList.at(pathNumber);
         color = path.getColor();
-        list<string>::iterator findIter = find(colorList.begin(), colorList.end(), color);
-            if(findIter != colorList.end()){
-                //Seleccionar path para la siguiente fase de seleccion
-                cout<<"Coincidencia encontrada"<<endl; //Hacer el append del elemenot path
+        vector<int> rgbValues = RGBConverter(color);
 
-                selectedPathList.push_back(path);
-            }
+        bool matchDetected = RGBMatch(colorList,rgbValues);
+        if (matchDetected){
+            filteredPaths.push_back(path);
+          }
     }
 }
-
 
 /*
 
