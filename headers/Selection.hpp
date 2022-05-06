@@ -1,3 +1,4 @@
+#include <cmath>
 #include "../headers/main.hpp"
 #include "../headers/Observer.hpp"
 
@@ -79,6 +80,7 @@ bool RGBMatch(vector< vector<int> > colorList, vector<int> colorComparar){
     }
     return matchRangeColor;
 }
+
 int hexadecimalToDecimal(string hexVal) {
     int len = hexVal.size();
     // Initializing base value to 1, i.e 16^0
@@ -131,6 +133,22 @@ void ColorFilter(vector<Path> capturedPathList, vector <vector<int>> colorList){
           }
     }
 }
+
+void splitStringIntoList(string pStr, string pDelimiter, pair<double, double>& pPathPoint) {
+    // solo toma 2 elementos
+    int start = 0;
+    int end = pStr.find(pDelimiter);
+    pPathPoint.first = stod(pStr.substr(start, end - start));
+    start = end + pDelimiter.size();
+    end = pStr.find(pDelimiter, start);
+    pPathPoint.second = stod(pStr.substr(start, end - start));
+}
+
+bool checkProximityBetweenPoints(pair<double, double> pUserPoint, pair<double, double> pPathPoint) {
+    double distance = sqrt( pow((pUserPoint.first - pPathPoint.first), 2) + pow((pUserPoint.second - pPathPoint.second), 2) );
+    return distance <= ratio; // chequear como hacer que mantenga el ratio
+}
+
 
 /*
 

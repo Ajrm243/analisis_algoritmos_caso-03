@@ -8,6 +8,8 @@
 #include "../headers/main.hpp"
 #include "../headers/Observer.hpp"
 #include "../headers/Selection.hpp"
+#include "../headers/Routing.hpp"
+#include "../headers/Generation.hpp"
 
 
 
@@ -52,26 +54,6 @@ void extractNodeData(xml_node<>* node){
   }
 }
 
-/*
-//using namespace std;
-class Operator : public Subject{
-    private:
-    std::list<Observer*> ObserverList;
-    public:
-    void attach(Observer* pObserver) {
-        ObserverList.push_back(pObserver);
-    }
-    void detach(Observer* pObserver) {
-        ObserverList.remove(pObserver);
-    }
-};
-class Selector : public Observer {
-};
-class Router : public Observer {
-};
-class Generator : public Observer {
-};
-*/
 int main() {
     //Leer XML
     file<> file("../svganimation/images/svg/wifi-2.svg"); // Lee y carga el archivo en memoria
@@ -83,7 +65,11 @@ int main() {
     xml_node<> *root = myDoc.first_node("svg");
     // Get root node
 
+    Selection selectionObserver = Selection();
     cout << endl;
+
+
+
     //extractPath(&myDoc);
 
     //Modificar un atributo existente
