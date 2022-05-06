@@ -288,8 +288,6 @@ void Routing(vector<Path> selectedPathList, int start, int end){
   
 }
 
-
-
 void PrintVector(vector<Path> ejemplo){
   for(int i=0;i<ejemplo.size();i++){
     pair <double,double> interseccion = ejemplo[i].getIntersectionPoint();
