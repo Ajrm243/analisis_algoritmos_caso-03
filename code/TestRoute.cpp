@@ -6,6 +6,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <cmath>
 #include "../headers/Path.hpp"
 
 using namespace std;
