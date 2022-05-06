@@ -64,23 +64,21 @@ void CollectPaths(xml_node<>* node){
 
 
 bool RGBMatch(vector< vector<int> > colorList, vector<int> colorComparar){
-  bool matchRangeColor = false;
-
-  for(int i = 0; colorList.size(); i++){
-    int redDiference = abs(colorComparar[0] - colorList[i][0]);
-    int blueDiference = abs(colorComparar[0] - colorList[i][0]);
-    int greenDiference = abs(colorComparar[0] - colorList[i][0]);        
-
-    if (redDiference <= 30 && blueDiference <= 30 && greenDiference <=30){
-      matchRangeColor = true;
-      break;
+    // colorlist[0]=RED, colorlist[1]=GREEN, colorlist[2]=BLUE
+    bool matchRangeColor = false;
+    for(int i = 0; colorList.size(); i++){
+        int redDiference = abs(colorComparar[0] - colorList[i][0]);
+        int blueDiference = abs(colorComparar[0] - colorList[i][0]);
+        int greenDiference = abs(colorComparar[0] - colorList[i][0]);        
+        if (redDiference <= 30 && blueDiference <= 30 && greenDiference <=30){
+            matchRangeColor = true;
+            break;
+        }
     }
-
-  }
-  return matchRangeColor;
+    return matchRangeColor;
 }
-int hexadecimalToDecimal(string hexVal)
-{
+
+int hexadecimalToDecimal(string hexVal) {
     int len = hexVal.size();
     // Initializing base value to 1, i.e 16^0
     int base = 1;
@@ -103,19 +101,18 @@ int hexadecimalToDecimal(string hexVal)
     return dec_val;
 }
 vector<int> RGBConverter(string hexValue){
-  int r,g,b;
-  string subR = (hexValue.substr(1,2));
-  r = hexadecimalToDecimal(subR);
-  string subG = (hexValue.substr(2,2));
-  g = hexadecimalToDecimal(subG);
-  string subB = (hexValue.substr(5,2));
-  b = hexadecimalToDecimal(subB);
+    int r,g,b;
+    string subR = (hexValue.substr(1,2));
+    r = hexadecimalToDecimal(subR);
+    string subG = (hexValue.substr(2,2));
+    g = hexadecimalToDecimal(subG);
+    string subB = (hexValue.substr(5,2));
+    b = hexadecimalToDecimal(subB);
 
-  cout<<"Sub R "<<subR<<endl;
-  cout<<"Sub G "<<subG<<endl;
-  cout<<"Sub B "<<subB<<endl;
-
-  return {r,g,b};
+    cout<<"Sub R "<<subR<<endl;
+    cout<<"Sub G "<<subG<<endl;
+    cout<<"Sub B "<<subB<<endl;
+    return {r,g,b};
 }
 
 void ColorFilter(vector<Path> capturedPathList, vector <vector<int>> colorList){
