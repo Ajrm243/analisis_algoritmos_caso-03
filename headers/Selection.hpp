@@ -5,6 +5,8 @@
     *****Posible acomodo de la clase Seleccion ******
 */
 
+#define MAGNETIC_POWER 50.5
+
 
 class Selection : public Observer {
 public:
@@ -79,8 +81,7 @@ bool RGBMatch(vector< vector<int> > colorList, vector<int> colorComparar){
   }
   return matchRangeColor;
 }
-int hexadecimalToDecimal(string hexVal)
-{
+int hexadecimalToDecimal(string hexVal) {
     int len = hexVal.size();
     // Initializing base value to 1, i.e 16^0
     int base = 1;
