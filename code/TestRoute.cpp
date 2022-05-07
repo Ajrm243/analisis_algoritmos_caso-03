@@ -17,13 +17,10 @@ vector<string> pathDescriptionList;
 */
 
 
-double numberToCompare = (100 / 100)*1.8;
 
+double radiansToDegrees(double radians) {
+    return radians * 180 / M_PI;
 
-double radianesAGrados(double radianes)
-{
-  double PI = 2 * acos(0.0);
-  return radianes * 180 / PI;
 }
 /*
 vector<Path> Routing(vector<Path> selected_paths, double width, double height, double degree ){

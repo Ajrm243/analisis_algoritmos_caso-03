@@ -1,16 +1,12 @@
 
-#include <iostream>
-#include <list>
 //#include <bits/stdc++.h>
 
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/main.hpp"
-#include "../headers/Observer.hpp"
-#include "../headers/Selection.hpp"
-
-
-
+#include "../headers/Selector.hpp"
+#include "../headers/Router.hpp"
+#include "../headers/Generator.hpp"
 /*
 *****************
 *    GLOBALES   *
@@ -52,26 +48,6 @@ void extractNodeData(xml_node<>* node){
   }
 }
 
-/*
-//using namespace std;
-class Operator : public Subject{
-    private:
-    std::list<Observer*> ObserverList;
-    public:
-    void attach(Observer* pObserver) {
-        ObserverList.push_back(pObserver);
-    }
-    void detach(Observer* pObserver) {
-        ObserverList.remove(pObserver);
-    }
-};
-class Selector : public Observer {
-};
-class Router : public Observer {
-};
-class Generator : public Observer {
-};
-*/
 int main() {
     //Leer XML
     file<> file("../svganimation/images/svg/wifi-2.svg"); // Lee y carga el archivo en memoria
@@ -83,7 +59,14 @@ int main() {
     xml_node<> *root = myDoc.first_node("svg");
     // Get root node
 
-    cout << endl;
+    cout << "step 0" << endl;
+    Selector selectionObserver = Selector();
+    void* selectPhaseStep = malloc(sizeof(int));
+    *((int*)selectPhaseStep) = 0;
+    selectionObserver.update(selectPhaseStep);
+    cout << "step 1-ish" << endl;
+
+
     //extractPath(&myDoc);
 
     //Modificar un atributo existente
