@@ -1,15 +1,13 @@
 
-#include <iostream>
-#include <list>
 //#include <bits/stdc++.h>
 
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/main.hpp"
 #include "../headers/Observer.hpp"
-#include "../headers/Selection.hpp"
-#include "../headers/Routing.hpp"
-#include "../headers/Generation.hpp"
+#include "../headers/Selector.hpp"
+#include "../headers/Router.hpp"
+#include "../headers/Generator.hpp"
 
 
 
@@ -65,7 +63,7 @@ int main() {
     xml_node<> *root = myDoc.first_node("svg");
     // Get root node
 
-    Selection selectionObserver = Selection();
+    Selector selectionObserver = Selector();
     cout << endl;
 
 

@@ -82,12 +82,19 @@ int main() {
         "M2035.019,22.756h2.626v-9.065l-2.857,0.573v-1.464c3.412-0.688,2.424-0.573,4.449-0.573v10.529h2.626v1.353h-6.844V22.756z"
     };
 
-    string test = "M1945.305,19.063c1023.10,0";
-    string p = "[A-Za-z](.*)[A-Za-z]";
+    string test = "0 0 5011.389 4110.461";
+    string p = "0 0 (\\d+(.?\\d+)?) (\\d+(.?\\d+)?)";
     regex testReg = regex(p, regex_constants::ECMAScript);
     smatch testMatches;
     string pointValues;
 
+    regex_search(test, testMatches, testReg);
+    cout << "Group 0: " << testMatches[0].str() << endl;
+    cout << "Group 1: " << testMatches[1].str() << endl;
+    cout << "Group 3: " << testMatches[3].str() << endl;
+
+
+/*
     for (string path : pathDescriptionList) {
         regex_search(path, testMatches, testReg);
         pointValues = string(testMatches[1]);
@@ -100,8 +107,8 @@ int main() {
                 cout << "(" + to_string(userPoint.first) + ", " + to_string(userPoint.second) + ") found a match!" << endl;
             }
         }
-
     }
+*/
 
 
     return 0;
