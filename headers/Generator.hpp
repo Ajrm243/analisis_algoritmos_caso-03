@@ -29,6 +29,19 @@ void extractNodeData(xml_node<>* node){
   }
 }
 
+void writeSVG(){
+    //Escribir un nuevo archivo
+  file<> file("wifi-1.svg"); // Lee y carga el archivo en memoria
+  xml_document<> myDoc; //Raíz del árbol DOM
+  myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
+
+  ofstream copyFile("sample2.svg"); //Nuevo archivo
+  stringstream ss;
+  ss << *myDoc.first_node(); //Pasa el nodo raíz a ss
+  string stringXML = ss.str(); //ss.toString
+  copyFile << stringXML;
+  copyFile.close(); //Escribe y cierra
+}
 int main(){
   /* DOM
     Transformación de un XML en un árbol donde cada elemento es un nodo. Cada nodo puede tener un valor y 
@@ -41,6 +54,7 @@ int main(){
   myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
 
   //Recorrer elementos y atributos
+  writeSVG();
   extractXMLData(&myDoc);
 
   //Modificar un atributo existente
@@ -66,12 +80,15 @@ int main(){
   newNode->append_attribute(newAttr2); //Atributo "fill" para <path>
 
   //Escribir un nuevo archivo
+  /*
   ofstream copyFile("sample2.svg"); //Nuevo archivo
   stringstream ss;
   ss << *myDoc.first_node(); //Pasa el nodo raíz a ss
   string stringXML = ss.str(); //ss.toString
   copyFile << stringXML;
   copyFile.close(); //Escribe y cierra
+*/
+
 
   //Document to String
   string strXML;
