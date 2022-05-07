@@ -5,8 +5,8 @@ using namespace std;
 class Path {
   private:
     // Private attribute
-    string Id;
-    string Etiqueta; 
+    string id;
+    string tag;
     string dPath;
     string color;
 
@@ -22,14 +22,14 @@ class Path {
     //~Path() {}
     
     // Setter Id
-    void setId(string s) {Id = s;}
+    void setId(string s) {id = s;}
     // Getter Id
-    string getId() {return Id;}
+    string getId() {return id;}
 
     // Setter Etiqueta
-    void setEtiqueta(string s) {Etiqueta = s;}
+    void setTag(string s) {tag = s;}
     // Getter Etiqueta
-    string getEtiqueta() {return Etiqueta;}
+    string getTag() {return tag;}
 
     // Setter dPath
     void setPath(string s) {dPath = s;}
