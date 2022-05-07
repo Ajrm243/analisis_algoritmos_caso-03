@@ -17,10 +17,10 @@ vector<string> pathDescriptionList;
 */
 
 
-double radianesAGrados(double radianes)
-{
-  double PI = 2 * acos(0.0);
-  return radianes * 180 / PI;
+
+
+double radiansToDegrees(double radians) {
+    return radians * 180 / 3.14;
 }
 /*
 vector<Path> Routing(vector<Path> selected_paths, double width, double height, double degree ){
