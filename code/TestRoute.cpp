@@ -17,8 +17,10 @@ vector<string> pathDescriptionList;
 */
 
 
+
 double radiansToDegrees(double radians) {
     return radians * 180 / M_PI;
+
 }
 /*
 vector<Path> Routing(vector<Path> selected_paths, double width, double height, double degree ){
@@ -28,271 +30,273 @@ vector<Path> Routing(vector<Path> selected_paths, double width, double height, d
 */
 
 
-vector<pair<double, double>> FirstQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){ //From 0 to 90 degree angle
-  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función 
-  double x0= width;
-  double y0=yInicial;
-  double xMovements, yMovements;
-
-  double distance;
-
-  distance = degree;
-
-
-  yFinal = yInicial + distance;
-  double discountX;
-
-  if (yFinal> heigth){
-    discountX = yFinal-heigth;
-    yFinal-=discountX;
-
-    xFinal = abs( discountX - x0 );
-
-  }
-
-  else{
-    xFinal = width;
-  }
-  xMovements = (heigth - xInicial);
-  xMovements=xMovements/numFrames; //Set value into xMovements
-
-  yMovements = (yFinal-yInicial);
-  yMovements = yMovements/numFrames; //Set value into yMovements
-
-  vector<pair<double, double>> linearMovementPoints;
-  double xChanges = xInicial;
-  double yChanges = yInicial;
-  pair <double, double> MovementPoint;
-  while(numFrames>0){
-    xChanges = xChanges +xMovements;
-    yChanges = yChanges +yMovements;
-    MovementPoint.first = xChanges;
-    MovementPoint.second = yChanges;
-    cout<< xChanges <<" , "<<yChanges<<endl;
-    linearMovementPoints.push_back(MovementPoint);
-    numFrames --;
-  }
-
-  return linearMovementPoints;
-}
-vector<pair<double, double>> SecondQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){//From 90 to 180 degree angle
-  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función
-  double x90= xInicial;
-  double y90=heigth;
-  double xMovements, yMovements;
-
-  double distance;
-
-  distance = abs(90-degree);
-
-  xFinal = xInicial + distance;
-  double discountY;
-
-  if (xFinal> width){
-    discountY = xFinal-width;
-    xFinal-=discountY;
-
-    yFinal = abs( discountY - y90 );
-  }
-
-  else{
-    yFinal = heigth;
-  }
-
-  xMovements = (heigth - xInicial);
-  xMovements=xMovements/numFrames; //Set value into xMovements
-
-  yMovements = (yFinal-yInicial);
-  yMovements = yMovements/numFrames; //Set value into yMovements
-
-  vector<pair<double, double>> linearMovementPoints;
-  double xChanges = xInicial;
-  double yChanges = yInicial;
-  pair <double, double> MovementPoint;
-  while(numFrames>0){
-    xChanges = xChanges +xMovements;
-    yChanges = yChanges +yMovements;
-    MovementPoint.first = xChanges;
-    MovementPoint.second = yChanges;
-    cout<< xChanges <<" , "<<yChanges<<endl;
-    linearMovementPoints.push_back(MovementPoint);
-    numFrames --;
-  }
-
-  return linearMovementPoints;
-
-}
-vector<pair<double, double>> ThridQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){//From 180 to 270 degree angle
-  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función 
-  double x180= width;
-  double y180=yInicial;
-  double xMovements, yMovements;
-
-  double distance;
-
-  distance = abs(180-degree);
-
-
-  yFinal = yInicial + distance;
-  double discountX;
-
-  if (yFinal> heigth){
-    discountX = yFinal-heigth;
-    yFinal-=discountX;
-
-    xFinal = abs( discountX - x180 );
-
-  }
-
-  else{
-    xFinal = width;
-  }
-  xMovements = (heigth - xInicial);
-  xMovements=xMovements/numFrames; //Set value into xMovements
-
-  yMovements = (yFinal-yInicial);
-  yMovements = yMovements/numFrames; //Set value into yMovements
-
-  vector<pair<double, double>> linearMovementPoints;
-  double xChanges = xInicial;
-  double yChanges = yInicial;
-  pair <double, double> MovementPoint;
-  while(numFrames>0){
-    xChanges = xChanges +xMovements;
-    yChanges = yChanges +yMovements;
-    MovementPoint.first = xChanges;
-    MovementPoint.second = yChanges;
-    cout<< xChanges <<" , "<<yChanges<<endl;
-    linearMovementPoints.push_back(MovementPoint);
-    numFrames --;
-  }
-
-  return linearMovementPoints;
-}
-vector<pair<double, double>> FourthQuadrant(double xInicial, double yInicial, double degree,double width, double heigth, double numFrames){//From 270 to 360 degree angle
-  double xFinal, yFinal;//Guardarán los valores del punto final al que se moverá la función
-  double x270= xInicial;
-  double y270=heigth;
-  double xMovements, yMovements;
-
-  double distance;
-
-  distance = abs(270-degree);
-  xFinal = xInicial + distance;
-  double discountY;
-
-  if (xFinal> width){
-    discountY = xFinal-width;
-    xFinal-=discountY;
-
-    yFinal = abs( discountY - y270 );
-  }
-
-  else{
-    yFinal = heigth;
-  }
-
-  xMovements = (heigth - xInicial);
-  xMovements=xMovements/numFrames; //Set value into xMovements
-
-  yMovements = (yFinal-yInicial);
-  yMovements = yMovements/numFrames; //Set value into yMovements
-
-  vector<pair<double, double>> linearMovementPoints;
-  double xChanges = xInicial;
-  double yChanges = yInicial;
-  pair <double, double> MovementPoint;
-  while(numFrames>0){
-    xChanges = xChanges +xMovements;
-    yChanges = yChanges +yMovements;
-    MovementPoint.first = xChanges;
-    MovementPoint.second = yChanges;
-    cout<< xChanges <<" , "<<yChanges<<endl;
-    linearMovementPoints.push_back(MovementPoint);
-    numFrames --;
-  }
-
-  return linearMovementPoints;
-}
-
-void LineMovements(double distancia, double xInicial, double yInicial, double xFinal, double yFinal, double numFrames, double xMovements, double yMovements){ //Receives also the path to use getters and setters
-  vector<pair<double, double>> linearMovementPoints;
-  double xChanges, yChanges;
-  pair <double, double> MovementPoint;
-  while(numFrames>0){
-    xChanges = xChanges +xMovements;
-    yChanges = yChanges +yMovements;
-    MovementPoint.first = xChanges;
-    MovementPoint.second = yChanges;
-    
-    linearMovementPoints.push_back(MovementPoint);
-  }
-  //When al the sums are done we set the value for linearMovementPoints
-
-}
-void CombineRouting(vector<Path> selectedPathList, int start, int middlePoint, int end ){
-//Conquer phase of the algorithm
-  vector<Path> temporarySortedPath(end-start +1);
-
-  int copyStart = start;
-  int copyMiddlePoint = middlePoint +1;
-  int mergeInsertionIndex = 0;
-
-  while(copyStart <= middlePoint && copyMiddlePoint <= end){ //When both sides of the vector still have paths to compare
-    pair<double,double> LeftSortIntersection = selectedPathList[copyStart].getIntersectionPoint();
-    double xIntersectLeft = LeftSortIntersection.first;
-
-    pair<double,double> rigthSortIntercetion = selectedPathList[copyMiddlePoint].getIntersectionPoint();
-    double xIntersectRigth = rigthSortIntercetion.first;
-
-    if(xIntersectLeft <= xIntersectRigth){
-      temporarySortedPath[mergeInsertionIndex++] = selectedPathList[copyStart++];
-      //copyStart++;
-      //mergeInsertionIndex++;
+vector<double> FirstQuadrant(Path path, double degree, double width, double height, double numFrames){//From 0 to 90 degree angle
+  double xStart = path.getIntersectionPoint().first;
+  double yStart = path.getIntersectionPoint().second;
+  double distance, oppositeDistance, xMovements, xEnd,yEnd,adjacentAngle;
+  if(degree>=0 && degree < 45){
+    if(degree == 0 ){
+      xEnd = width;
+      yEnd = height - yStart;
+      distance = width - xStart;
     }
     else{
-      temporarySortedPath[mergeInsertionIndex++] = selectedPathList[copyMiddlePoint++];
+    adjacentAngle = degree;
+    oppositeDistance = (width - xStart) *tan(adjacentAngle);
+    yEnd = height - oppositeDistance;
+    xEnd = width;
+    distance = sqrt(pow(width - xStart,2) + pow(oppositeDistance,2));
     }
   }
-  //If the right sub-group has run out of values
-  // Then add the rest of the values from the left side into the result
-  while(copyStart <= middlePoint){
-    temporarySortedPath[mergeInsertionIndex] = selectedPathList[copyStart];
-    mergeInsertionIndex++, copyStart++;
+  if(degree > 45 && degree <=90){
+    if(degree == 90){ //linear Movement
+      xEnd = xStart;
+      yEnd = 0;
+      distance = height;
+    }
+    else{
+    adjacentAngle =90 - degree;
+    oppositeDistance = height * tan(adjacentAngle);
+    yEnd = 0;
+    xEnd = xStart + oppositeDistance;
+    distance = sqrt(pow(width-xStart,2) + pow(oppositeDistance,2));
+    }
   }
-  //If the left sub-group has run out of values
-  //then add the rest of the values from the rigth side into the result
-  while(copyMiddlePoint <= end){
-    temporarySortedPath[mergeInsertionIndex] = selectedPathList[copyMiddlePoint];
-    mergeInsertionIndex++, copyMiddlePoint++;
+  if(degree == 45){ //Middle 
+    distance = sqrt(pow(width-xStart,2) + pow(height-yStart,2)); //Pythagoras
+    xStart = width;
+    yStart = 0;
   }
- //Merge Phase for the algoritm
- //Overwrite the original selectedPathList
-  for( int indexMerge = start; indexMerge <= end; indexMerge++ ){
-    selectedPathList[indexMerge] = temporarySortedPath[indexMerge - start];
-  }
+  xMovements = distance / numFrames;
+  return {xMovements,xEnd,yEnd};
+}
 
+vector<double> SecondQuadrant(Path path, double degree, double width, double height, double numFrames){//From 90 to 180 degree angle
+  double xStart = path.getIntersectionPoint().first;
+  double yStart = path.getIntersectionPoint().second;
+  double distance, oppositeDistance, xMovements, xEnd,yEnd,adjacentAngle;
+  if(degree>90 && degree < 135){
+    adjacentAngle = degree - 90;
+    oppositeDistance = (yStart) *tan(adjacentAngle);
+    yEnd = 0;
+    xEnd = xStart - oppositeDistance;
+    distance = sqrt(pow(yStart,2) + pow(oppositeDistance,2));
   }
-  
-//Divide and Conquer approach 
-void Routing(vector<Path> selectedPathList, int start, int end){
-  if(start <end){
-    int middlePoint = (start + end)/2;
-    //Divide phase of the algorithm
-    Routing(selectedPathList, start, middlePoint); //Analice left side of the vector with the paths
-    Routing(selectedPathList,middlePoint +1, end); //Analice right side of the vector with the paths
-  
-    CombineRouting(selectedPathList,start,middlePoint,end); 
+  if(degree > 135 && degree <=180){
+    if(degree == 180){ //linear Movement
+      xEnd = 0;
+      yEnd = yStart;
+      distance = xStart;
+    }
+    else{
+    adjacentAngle =180 - degree;
+    oppositeDistance = (xStart) * tan(adjacentAngle);
+    yEnd = yStart - oppositeDistance;
+    xEnd = 0;
+    distance = sqrt(pow(xStart,2) + pow(oppositeDistance,2));
+    }
   }
-  
+  if(degree == 135){ //Middle 
+    distance = sqrt(pow(width-xStart,2) + pow(height-yStart,2)); //Pythagoras
+    xStart = 0;
+    yStart = 0;
+  }
+  xMovements = distance / numFrames;
+  return {xMovements,xEnd,yEnd};
+}
+
+vector<double> ThirdQuadrant(Path path, double degree, double width, double height, double numFrames){//From 270 to 360 degree angle
+  double xStart = path.getIntersectionPoint().first;
+  double yStart = path.getIntersectionPoint().second;
+  double distance, oppositeDistance, xMovements, xEnd,yEnd,adjacentAngle;
+  if(degree>270 && degree < 315){
+    adjacentAngle = degree - 270;
+    oppositeDistance = (height - yStart) *tan(adjacentAngle);
+    yEnd = height;
+    xEnd = xStart + oppositeDistance;
+    distance = sqrt(pow(height-yStart,2) + pow(oppositeDistance,2));
+  }
+  if(degree > 315 && degree <=360){
+    if(degree == 360){ //linear Movement
+      xEnd = width;
+      yEnd = yStart;
+      distance = width - xStart;
+    }
+    else{
+    adjacentAngle =360 - degree;
+    oppositeDistance = (width - xStart) * tan(adjacentAngle);
+    yEnd = yStart + oppositeDistance;
+    xEnd = width;
+    distance = sqrt(pow(width-xStart,2) + pow(oppositeDistance,2));
+    }
+  }
+  if(degree == 315){ //Middle 
+    distance = sqrt(pow(width-xStart,2) + pow(height-yStart,2)); //Pythagoras
+    xStart = width;
+    yStart = height;
+  }
+  xMovements = distance / numFrames;
+  return {xMovements,xEnd,yEnd};
+}
+
+vector<double> FourthQuadrant(Path path, double degree, double width, double height, double numFrames){//From 270 to 360 degree angle
+  double xStart = path.getIntersectionPoint().first;
+  double yStart = path.getIntersectionPoint().second;
+  double distance, oppositeDistance, xMovements, xEnd,yEnd,adjacentAngle;
+  if(degree>270 && degree < 315){
+    adjacentAngle = degree - 270;
+    oppositeDistance = (height - yStart) *tan(adjacentAngle);
+    yEnd = height;
+    xEnd = xStart + oppositeDistance;
+    distance = sqrt(pow(height-yStart,2) + pow(oppositeDistance,2));
+  }
+  if(degree > 315 && degree <=360){
+    if(degree == 360){ //linear Movement
+      xEnd = width;
+      yEnd = yStart;
+      distance = width - xStart;
+    }
+    else{
+    adjacentAngle =360 - degree;
+    oppositeDistance = (width - xStart) * tan(adjacentAngle);
+    yEnd = yStart + oppositeDistance;
+    xEnd = width;
+    distance = sqrt(pow(width-xStart,2) + pow(oppositeDistance,2));
+    }
+  }
+  if(degree == 315){ //Middle 
+    distance = sqrt(pow(width-xStart,2) + pow(height-yStart,2)); //Pythagoras
+    xStart = width;
+    yStart = height;
+  }
+  xMovements = distance / numFrames;
+  return {xMovements,xEnd,yEnd};
+}
+
+ //Obtain the curve points using the de Casterljau's Algorithm
+ //It uses linear interpolation between four points
+void DeCastreljauAlgortithm(double xStart, double yStart, double xEnd, double yEnd){
+
+}
+
+//Obtains the linear point of the path
+//It uses linear interpolation to obtain each pair of points
+vector<pair<double, double>> LineMovements(Path path,  vector<double> respuesta, double numFrames){ //Receives also the path to use getters and setters
+  cout<<"hola"<<endl;
+  vector<pair<double, double>> LinearMovements;
+  pair <double, double> MovementPoint;
+  double x0 = path.getIntersectionPoint().first;
+  double y0 = path.getIntersectionPoint().second;
+  double xp = path.getIntersectionPoint().first;
+  double x1= respuesta[1],y1=respuesta[2],yp=0,sumMove=respuesta[0];
+  while(numFrames > 0 ){
+    if(sumMove < numberToCompare){
+      MovementPoint.first = xp;
+      MovementPoint.second = yp;
+      LinearMovements.push_back(MovementPoint);
+      sumMove+=respuesta[0];
+    }
+    else{
+      xp += sumMove;
+      yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0);
+      MovementPoint.first = xp;
+      MovementPoint.second = yp;
+      cout<<xp<<" "<<yp<<endl;
+      LinearMovements.push_back(MovementPoint);
+
+      sumMove = respuesta[0];
+    }
+  numFrames --;
+  }
+  return LinearMovements;
+}
+
+vector<pair<double, double>> CalculateRoute(Path path, double degree, double width, double heigth,double numFrames){
+  vector<double> respuesta;
+  vector<pair<double, double>> LinearMovements;
+  if (degree >=0 && degree <=90){respuesta = FirstQuadrant(path,degree,width,heigth,numFrames);}
+  if(degree > 90 && degree <=180){respuesta = FirstQuadrant(path,degree,width,heigth,numFrames);}
+  if(degree >180 && degree <=270){respuesta = FirstQuadrant(path,degree,width,heigth,numFrames);}
+  if(degree >270 && degree <=360){respuesta = FirstQuadrant(path,degree,width,heigth,numFrames);}
+  LinearMovements = LineMovements(path, respuesta,numFrames);
+  return LinearMovements;
+}
+
+
+void CombineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int final, double degree, double width, double heigth,double numFrames){
+    int i,j,k;
+    int elementosIzq = mitad - inicio + 1;
+    int elementosDer = final - mitad;
+    vector<pair<double, double>> respuesta;
+    vector<Path> izquierda(elementosIzq);
+    vector<Path> derecha(elementosDer);
+
+    for(int i = 0; i < elementosIzq; i++){
+        izquierda[i] = selectedPathList[inicio+i];
+    }
+    for(int j = 0; j < elementosDer; j++){
+        derecha[j] = selectedPathList[mitad + 1 + j];
+    }
+
+    i = 0;
+    j = 0;
+    k = inicio;
+    double intersectionLeft, intersectionRigth;
+    while(i < elementosIzq && j < elementosDer){
+      intersectionLeft = izquierda[i].getIntersectionPoint().first;
+      intersectionRigth = derecha[j].getIntersectionPoint().first;
+      if(intersectionLeft <= intersectionRigth){
+          if(intersectionLeft == intersectionRigth){
+            respuesta = CalculateRoute(izquierda[i],degree,width,heigth,numFrames);
+            izquierda[i].setLinearMovements(respuesta);
+            derecha[j].setLinearMovements(respuesta);
+          }
+          selectedPathList[k] = izquierda[i];
+          i++;
+      }else{
+          selectedPathList[k] = derecha[j];
+          respuesta = CalculateRoute(derecha[j],degree,width,heigth,numFrames);
+          derecha[j].setLinearMovements(respuesta);
+          j++;
+      }
+      k++;
+    }
+
+    while(j < elementosDer){
+        respuesta = CalculateRoute(derecha[j],degree,width,heigth,numFrames);
+        derecha[j].setLinearMovements(respuesta);
+        selectedPathList[k] = derecha[j];
+        j++;
+        k++;
+    }
+
+    while(i < elementosIzq){
+        respuesta = CalculateRoute(izquierda[i],degree,width,heigth,numFrames);
+        izquierda[i].setLinearMovements(respuesta);
+        selectedPathList[k] = izquierda[i];
+        i++;
+        k++;
+    }
+
+}
+
+void Routing(vector<Path> &selectedPathList, int start, int end, double degree, double width, double heigth,double numFrames){
+    if(start < end){
+        int mitad = start + (end - start)/2;
+        Routing(selectedPathList,start,mitad,degree,width,heigth,numFrames);
+        Routing(selectedPathList,mitad+1,end,degree,width,heigth,numFrames);
+        CombineRouting(selectedPathList,start,mitad,end,degree,width,heigth,numFrames);
+    }
 }
 
 void PrintVector(vector<Path> ejemplo){
   for(int i=0;i<ejemplo.size();i++){
     pair <double,double> interseccion = ejemplo[i].getIntersectionPoint();
-    cout<<interseccion.first<<endl;
+    vector<pair<double, double>> Movements = ejemplo[i].getLinearMovement();
+    cout<<interseccion.first<<" "<<Movements[1].first<< Movements[2].first<<endl;
   }
 }
+
 
 int main() {
 
