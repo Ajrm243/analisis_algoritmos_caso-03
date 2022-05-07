@@ -4,13 +4,9 @@
 #include "../rapidxml/rapidxml_ext.hpp" //Clases para manejo del DOM
 #include "../rapidxml/rapidxml_utils.hpp" //Clase File
 #include "../headers/main.hpp"
-#include "../headers/Observer.hpp"
 #include "../headers/Selector.hpp"
 #include "../headers/Router.hpp"
 #include "../headers/Generator.hpp"
-
-
-
 /*
 *****************
 *    GLOBALES   *
@@ -63,9 +59,12 @@ int main() {
     xml_node<> *root = myDoc.first_node("svg");
     // Get root node
 
+    cout << "step 0" << endl;
     Selector selectionObserver = Selector();
-    cout << endl;
-
+    void* selectPhaseStep = malloc(sizeof(int));
+    *((int*)selectPhaseStep) = 0;
+    selectionObserver.update(selectPhaseStep);
+    cout << "step 1-ish" << endl;
 
 
     //extractPath(&myDoc);

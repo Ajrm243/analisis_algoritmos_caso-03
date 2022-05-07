@@ -19,28 +19,37 @@ class Selector : public Observer {
         ~Selector() {}
 
         void update(void* pSelectionProcess) {
+            cout << "entro update de Selector" << endl;
+            cout << "step: " << pSelectionProcess << endl;
             // (int*) = castear el puntero void a puntero a int
             // *(int*) = valor del int al que apunta
-            int stepValue = *(int*)pSelectionProcess;
-            if (stepValue == 0)
+            int stepValue = *(static_cast<int*>(pSelectionProcess));
+            cout << "stepValue: " << stepValue << endl;
+            if (stepValue == 0) {
                 cout << "Recolectando elementos paths" << endl;
-            else if (stepValue == 1)
+                xml_node<>* someNode;
+                //collectPaths(someNode);
+            } else if (stepValue == 1) {
                 cout << "Recolectando paths con coincidencias de color" << endl;
-            else if (stepValue == 2)
+
+            } else if (stepValue == 2) {
                 cout << "Analizando intersecciones de puntos con valores de paths" << endl;
+            } else {
+                cout << "No reconoce el step value somehow" << endl;
+            }
         }
         void collectPaths(xml_node<>* pNode){
             //vector <Path> capturedPathList;
             //Recognize based on the node tag if the node_element "path" and "g" --> At the moment
             //At the moment they are only being printed until defining the structure that will be used to store them
-            bool isRatioSet = false;
             for (pNode = pNode->first_node(); pNode != NULL; pNode = pNode->next_sibling()){
                 Path path;
                 if (pNode->type() == node_element){
                     string label = pNode->name();
                     path.setTag(label);
                     string d, color, idPath, stringWidth, stringHeight;
-                    if (label == "svg") {;
+                    // todo esto para conseguir el ratio del svg
+                    if (label == "svg") {
                         // 2 opciones: viewBox o Height & Width
                         xml_attribute<>* lookupAttr = pNode->first_attribute("viewBox");
                         if (lookupAttr != NULL) {
@@ -65,7 +74,6 @@ class Selector : public Observer {
                         path.setId(idPath);
                         d = pNode->first_attribute("d")->value();
                         path.setPath(d);
-                        allPathsList.push_back(path);
                         // con color depende del atributo que exista
                         // prioridad: 1-stroke 2-fill 3-opacity
                         if (pNode->first_attribute("stroke") != NULL) {
@@ -75,6 +83,8 @@ class Selector : public Observer {
                         } else {
                             path.setColor(pNode->first_attribute("opacity")->value());
                         }
+                        // push a la lista de paths
+                        allPathsList.push_back(path);
                     }
                 }
             }
@@ -147,19 +157,9 @@ class Selector : public Observer {
             }
         }
 
-        void splitStringIntoList(string pStr, string pDelimiter, pair<double, double>& pPathPoint) {
-            // solo toma 2 elementos
-            int start = 0;
-            int end = pStr.find(pDelimiter);
-            pPathPoint.first = stod(pStr.substr(start, end - start));
-            start = end + pDelimiter.size();
-            end = pStr.find(pDelimiter, start);
-            pPathPoint.second = stod(pStr.substr(start, end - start));
-        }
-
         bool checkProximityBetweenPoints(pair<double, double> pUserPoint, pair<double, double> pPathPoint) {
             double distance = sqrt( pow((pUserPoint.first - pPathPoint.first), 2) + pow((pUserPoint.second - pPathPoint.second), 2) );
-            return distance <= ratio; // chequear como hacer que mantenga el ratio
+            return distance <= ratio; // chequea con el ratio que creó en base a las dimensiones del svg
         }
 };
 
