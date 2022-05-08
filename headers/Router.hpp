@@ -5,8 +5,9 @@
 #endif
 #include "../headers/main.hpp"
 #include "../headers/Processor.hpp"
-#define MINIMUM_FRAME_MOVEMENT (100 / 100)*1.8
-double movementPerFrame;
+#ifndef MINIMUM_FRAME_MOVEMENT
+#define MINIMUM_FRAME_MOVEMENT 1.8
+#endif
 
 double radianesAGrados(double radianes)
 {
@@ -20,10 +21,29 @@ vector<Path> Routing(vector<Path> selected_paths, double width, double height, d
 */
 class Router : public Observer {
     private:
+        double cHeight;
+        double cWidth;
         double movementPerFrame;
     public:
         Router(){};
         ~Router(){};
+        void update(void* pObj) {
+            infoPacket* castedPacket = (static_cast<infoPacket*>(pObj));
+        }
+        void update(infoPacket* pUserPacket) {
+            cout << "Llega en el Router Class" << endl;
+            cout << "Dimensiones: (" << pUserPacket->canvasWidth << ", " << pUserPacket->canvasHeight << ")" << endl;
+            cHeight = pUserPacket->canvasHeight;
+            cWidth = pUserPacket->canvasWidth;
+            movementPerFrame = (cWidth / cHeight) * MINIMUM_FRAME_MOVEMENT;
+            cout << "minimumMovementPerFrame: " << movementPerFrame << endl;
+            infoPacket workingPacket = *pUserPacket;
+            routing(workingPacket.pathListMod, 0, workingPacket.pathListMod.size()-1, workingPacket.angleMod, workingPacket.canvasWidth, workingPacket.canvasHeight, workingPacket.frameMod);
+            for (Path p : pUserPacket->pathListMod) {
+                cout << "Movement at frame 0: (";
+                cout << p.getLinearMovement().at(0).first << ", " << p.getLinearMovement().at(0).second << ")" << endl;
+            }
+        }
         vector<double> firstQuadrantMovementCalculation(Path path, double degree, double width, double height, double numFrames){//From 0 to 90 degree angle
             double xStart = path.getIntersectionPoint().first;
             double yStart = path.getIntersectionPoint().second;
@@ -173,15 +193,16 @@ class Router : public Observer {
 
         //Obtains the linear point of the path
         //It uses linear interpolation to obtain each pair of points
-        vector<pair<double, double>> lineMovements(Path path,  vector<double> respuesta, double numFrames){ //Receives also the path to use getters and setters
+        vector<pair<double, double>> lineMovements(Path path, vector<double> respuesta, double numFrames){ //Receives also the path to use getters and setters
             vector<pair<double, double>> LinearMovements;
             pair <double, double> MovementPoint;
             double x0 = path.getIntersectionPoint().first;
             double y0 = path.getIntersectionPoint().second;
             double xp = path.getIntersectionPoint().first;
-            double x1= respuesta[1],y1=respuesta[2],yp=0,sumMove=respuesta[0];
+            double x1 = respuesta[1],y1=respuesta[2],yp=0,sumMove=respuesta[0];
+            cout << "Sum move: " << sumMove << endl;
             while(numFrames > 0 ){
-                if(abs(sumMove) < MINIMUM_FRAME_MOVEMENT){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
+                if(abs(sumMove) < movementPerFrame){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
                     MovementPoint.first = xp;
                     MovementPoint.second = yp;
                     LinearMovements.push_back(MovementPoint);
@@ -209,6 +230,7 @@ class Router : public Observer {
         }
 
         vector<pair<double, double>> calculateRoute(Path path, double degree, double width, double heigth,double numFrames){
+            cout << "Llega a calculateRoute" << endl;
             vector<double> respuesta;
             vector<pair<double, double>> LinearMovements;
             if (degree >=0 && degree <=90){respuesta = firstQuadrantMovementCalculation(path,degree,width,heigth,numFrames);}
@@ -219,6 +241,7 @@ class Router : public Observer {
             return LinearMovements;
         }
         void combineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int final, double degree, double width, double heigth,double numFrames){
+            cout << "Entra a combineRouting" << endl;
             int leftIndex,rigthIndex,k;
             int leftElements = mitad - inicio + 1;
             int rightElements = final - mitad;
@@ -239,6 +262,7 @@ class Router : public Observer {
                 intersectionLeft = leftHalf[leftIndex].getIntersectionPoint().first;
                 intersectionRigth = rightHalf[rigthIndex].getIntersectionPoint().first;
                 if(intersectionLeft <= intersectionRigth){
+                    cout << "Antes de llamada a calculateRoute" << endl;
                     respuesta = calculateRoute(leftHalf[leftIndex],degree,width,heigth,numFrames);
                     if(intersectionLeft == intersectionRigth){
                     leftHalf[leftIndex].setLinearMovements(respuesta);
@@ -248,6 +272,7 @@ class Router : public Observer {
                     selectedPathList[k].setLinearMovements(respuesta);
                     leftIndex++;
                 }else{
+                    cout << "Antes de llamada a calculateRoute" << endl;
                     respuesta = calculateRoute(rightHalf[rigthIndex],degree,width,heigth,numFrames);
                     rightHalf[rigthIndex].setLinearMovements(respuesta);
                     selectedPathList[k] = rightHalf[rigthIndex];
@@ -277,7 +302,7 @@ class Router : public Observer {
             }
 
             }
-        void PrintVector(vector<Path> ejemplo){
+        void printVector(vector<Path> ejemplo){
             for(int i=0;i<ejemplo.size();i++){
                 double move = ejemplo[i].getLinearMovement()[1].first;
                 cout<<move<<endl;
@@ -300,11 +325,12 @@ class Router : public Observer {
             }
                 return pSelectedPathList;
             }
-        void Routing(vector<Path> &selectedPathList, int start, int end, double degree, double width, double heigth,double numFrames){
+        void routing(vector<Path>& selectedPathList, int start, int end, double degree, double width, double heigth, double numFrames){
+            cout << "Entra routing" << endl;
             if(start < end){
                 int mitad = start + (end - start)/2;
-                Routing(selectedPathList,start,mitad,degree,width,heigth,numFrames);
-                Routing(selectedPathList,mitad+1,end,degree,width,heigth,numFrames);
+                routing(selectedPathList,start,mitad,degree,width,heigth,numFrames);
+                routing(selectedPathList,mitad+1,end,degree,width,heigth,numFrames);
                 combineRouting(selectedPathList,start,mitad,end,degree,width,heigth,numFrames);
             }
         }

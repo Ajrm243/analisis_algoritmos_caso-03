@@ -31,6 +31,7 @@ typedef struct infoPacket {
     double angleMod;        // solo para angle data
     double canvasWidth;
     double canvasHeight;
+    double canvasRatio;
     // listas de elementos
     vector<string> hexColorListMod;
     vector<vector<int>> rgbColorListMod;

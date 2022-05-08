@@ -44,7 +44,7 @@ int main() {
     // prepara user info
     infoPacket newPacket;
     newPacket.packetPhase = 1;  // default 1 at start
-    newPacket.angleMod = 120;   // user angle
+    newPacket.angleMod = 300;   // user angle
     newPacket.frameMod = 20;    // user frames
     newPacket.hexColorListMod = {
         "#FFFFFF",

@@ -59,7 +59,9 @@ class Selector : public Observer {
             // el width es grupo 1 y height grupo 3
             //cout << "Valor del match 1: " << viewBoxMatch[1].str() << endl;
             //cout << "Valor del match 3: " << viewBoxMatch[3].str() << endl;
-            ratio = (stod(viewBoxMatch[1].str()) / stod(viewBoxMatch[3].str())) * MAGNETIC_POWER;
+            selectWidth = stod(viewBoxMatch[1].str());
+            selectHeight = stod(viewBoxMatch[3].str());
+            ratio = (selectWidth / selectHeight) * MAGNETIC_POWER;
             //cout << "Ratio: " << ratio << endl;
 
             rapidxml::xml_node<>* firstGroupNode = rootNode->first_node("g");
@@ -77,9 +79,7 @@ class Selector : public Observer {
             // ROUTING necesita la lista de paths seleccionados
             //cout << "Selected paths:" << endl;
             pUserPacket->pathListMod = selectedPathList;
-            for (auto path : selectedPathList) {
-                cout << path.getPath() << endl;
-            }
+            cout << "Selected count: " << selectedPathList.size() << endl;
             // magia oscura para llamar a Router y enviar el selectedPathList
             pUserPacket->canvasHeight = selectHeight;
             pUserPacket->canvasWidth = selectWidth;
