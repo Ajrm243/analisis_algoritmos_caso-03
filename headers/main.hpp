@@ -10,7 +10,7 @@
 #include <fstream>
 #include <cmath>
 #include <regex>
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 //#include <ObserverPattern.h>
 //#include <../headers/ObserverPattern.h>
 #include "../headers/Path.hpp"

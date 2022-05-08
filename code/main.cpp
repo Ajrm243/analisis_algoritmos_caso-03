@@ -54,8 +54,7 @@ int main() {
     xml_document<> myDoc; //Raíz del árbol DOM
     myDoc.parse<0>(file.data()); //Parsea el XML en un DOM
 
-    //Recorrer elementos y atributos
-    //extractXMLData(&myDoc);
+
     xml_node<> *root = myDoc.first_node("svg");
     // Get root node
 
