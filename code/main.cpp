@@ -64,7 +64,7 @@ int main() {
         {2340, 680},
         {3377, 137}
     };
-    newPacket.filePathMod = "wifi-1.svg";
+    newPacket.filePathMod = "tesla.svg";
     mainProcess.notify(1, &newPacket);
 
     return 0;

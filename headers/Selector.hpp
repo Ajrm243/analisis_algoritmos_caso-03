@@ -3,7 +3,7 @@
 #include "../headers/main.hpp"
 #include "../headers/Processor.hpp"
 // Se utiliza para escalar con el ratio la proximidad entre puntos
-#define MAGNETIC_POWER 50.5
+#define MAGNETIC_POWER 1000000
 // Se utiliza para aproximar por un valor de color con cierta tolerancia
 #define DALTONISM_INDICATOR 30
 #ifndef SVG_DIMENSION_PATTERN
@@ -18,6 +18,8 @@ class Selector : public Observer {
     private:
     // ratio es un numero arbitrario que más o menos expresa qué tan grande es el canvas
     double ratio;
+    double canvasHeight;
+    double canvasWidth;
     vector<Path> allPathsList;
     vector<Path> filteredPathList;
     vector<Path> selectedPathList;
@@ -39,6 +41,11 @@ class Selector : public Observer {
             * 2- lista de colores del usuario
             * 3- lista de puntos a buscar aproximar
             */
+
+            for (auto pp : pUserPacket->pointListMod) {
+                cout << pp.first << ", " << pp.second << endl;
+            }
+
            cout << pUserPacket->filePathMod << endl;
             string filePathContents = pUserPacket->filePathMod;
             rapidxml::file<> svgFile(filePathContents.c_str()); // cuidado con los tipos de datos
@@ -46,11 +53,15 @@ class Selector : public Observer {
             myDoc.parse<0>(svgFile.data()); //Parsea el XML en un DOM
             rapidxml::xml_node<>* rootNode = myDoc.first_node("svg");
             rapidxml::xml_node<>* firstGroupNode = rootNode->first_node("g");
-            collectPaths(firstGroupNode);
+            //getSVGInfo();
+            collectPaths(rootNode);
             filterColor(pUserPacket->rgbColorListMod);
+/*
+            cout << "Filtered paths:" << endl;
             for (auto p : filteredPathList) {
                 cout << p.getPath() << endl;
             }
+*/
             selectFinalPathContestants(pUserPacket->pointListMod);
             // ROUTING necesita la lista de paths seleccionados
             cout << "Selected paths:" << endl;
@@ -93,21 +104,29 @@ class Selector : public Observer {
                             regex_search(attrValue, viewBoxMatch, static_cast<regex>(SVG_DIMENSION_PATTERN));
                             // se opera por los grupos de captura
                             // el width es grupo 1 y height grupo 3
-                            ratio = stod(viewBoxMatch[1].str()) / stod(viewBoxMatch[3].str()) * MAGNETIC_POWER;
+                            cout << "Valor del match 1: " << viewBoxMatch[1].str() << endl;
+                            cout << "Valor del match 3: " << viewBoxMatch[3].str() << endl;
+                            ratio = (stod(viewBoxMatch[1].str()) * stod(viewBoxMatch[3].str())) * MAGNETIC_POWER;
                         }
                         else {
                             cout << "no viewBox, normal\n";
                             // se maneja con los atributos width y height
                             stringWidth = pNode->first_attribute("width")->value();
                             stringHeight = pNode->first_attribute("height")->value();
+
+                            cout << "Valor del width: " << stringWidth << endl;
+                            cout << "Valor del height: " << stringHeight << endl;
+
                             // define el ratio de una vez
-                            ratio = stod(stringWidth) / stod(stringHeight) * MAGNETIC_POWER;
+                            ratio = (stod(stringWidth) * stod(stringHeight)) * MAGNETIC_POWER;
                         }
                     }
                     if (label == "path"){
                         cout << "encuentra path\n";
+/*
                         idPath = pNode->first_attribute("id")->value();
                         path.setId(idPath);
+*/
                         d = pNode->first_attribute("d")->value();
                         path.setPath(d);
                         // con color depende del atributo que exista
@@ -174,10 +193,11 @@ class Selector : public Observer {
             g = convertHexToDec(subG);
             string subB = (hexValue.substr(5,2));
             b = convertHexToDec(subB);
-
+/*
             cout<<"Sub R "<<subR<<endl;
             cout<<"Sub G "<<subG<<endl;
             cout<<"Sub B "<<subB<<endl;
+*/
             return {r,g,b};
         }
 
@@ -195,6 +215,8 @@ class Selector : public Observer {
 
         bool checkProximityBetweenTwoPoints(Path pathInfo, pair<double, double> pPathPoint, pair<double, double> pUserPoint) {
             double distance = sqrt( pow((pUserPoint.first - pPathPoint.first), 2) + pow((pUserPoint.second - pPathPoint.second), 2) );
+            cout << "Distancia calculada: " << distance << endl;
+            cout << "Ratio actual: " << ratio << endl;
             // chequea con el ratio que creó en base a las dimensiones del svg
             if (distance <= ratio){
                 // esto es importante para Routing y Generation
@@ -210,7 +232,9 @@ class Selector : public Observer {
         void selectFinalPathContestants(vector<pair<double, double>> pUserPoints) {
             // Greedy: solo chequea con el primer Moveto de cada path
             for (Path p : filteredPathList) {
+                cout << "AQUI EXISTE UN PATH FILTRADO" << endl;
                 for(pair<double, double> userPoint : pUserPoints) {
+                    cout << "Intenta encontrar " << userPoint.first << ", " << userPoint.second << " en " << p.getTag() << endl;
                     if (checkProximityBetweenTwoPoints(p, p.getProperPoint(), userPoint)) {
                         cout << "Eureka!" << endl;
                         selectedPathList.push_back(p);

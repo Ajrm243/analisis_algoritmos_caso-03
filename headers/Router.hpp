@@ -201,7 +201,6 @@ class Router : public Observer {
                     MovementPoint.second = yp;
                     //cout<<xp<<" "<<yp<<endl;
                     LinearMovements.push_back(MovementPoint);
-
                     sumMove = respuesta[0];
                 }
                 numFrames --;
