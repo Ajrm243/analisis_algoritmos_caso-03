@@ -1,7 +1,7 @@
-#include <iostream>
-
+#ifndef PATH_H
+#define PATH_H
+#include "../headers/main.hpp"
 using namespace std;
-
 class Path {
   private:
     // Private attribute
@@ -61,3 +61,4 @@ class Path {
     void setLinearMovements(vector<pair<double,double>> Movements){linearMovement = Movements;}
     vector<pair<double,double>> getLinearMovement(){return linearMovement;}
 };
+#endif

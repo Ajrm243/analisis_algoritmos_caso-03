@@ -1,7 +1,7 @@
+#ifndef SELECTOR_H
+#define SELECTOR_H
 #include "../headers/main.hpp"
-//#include "../headers/Path.hpp"
-//#include "../headers/Observer.hpp"
-
+#include "../headers/Processor.hpp"
 // Se utiliza para escalar con el ratio la proximidad entre puntos
 #define MAGNETIC_POWER 50.5
 // Se utiliza para aproximar por un valor de color con cierta tolerancia
@@ -17,7 +17,6 @@ using namespace std;
 class Selector : public Observer {
     private:
     // ratio es un numero arbitrario que más o menos expresa qué tan grande es el canvas
-    Processor mainProcessSubject;
     double ratio;
     vector<Path> allPathsList;
     vector<Path> filteredPathList;
@@ -29,26 +28,36 @@ class Selector : public Observer {
         ~Selector() {}
         // https://www.plantuml.com/plantuml/svg/PP31JiCm44Jl_efHBgI7_a0aAY5GkQ1o27o0usoe8ROZUmD4LVyTjwcRfFXcUtPsvh7cbl1Q1VBVv94_k-rAX2zjE-cbGU0XVWVsMd5lMd4tVLd7j7MMTz8GNdgbQubIse2teQCVhvcysEkQGARZ0OPCHJu8MKKtgHYgbI6WxAjFYhU3U62MQf-dA2lnH3SFEyUw6VALE0fnsewM6ePhaabHZ0hHE0_Pjd3G5kuo7-8EmAqtxrqjcV8LZe9iVUuXXBOnRoFLZ4MK7rBQ8zBKQNaAdLszCwmtqsI13DUJ2J5MVNHMUM9Aq_JBSVyS0V1CNFAu1oZdbp2gpW__0DnO5yNC9xxttYxdfzvZj2mPf0ePP82A_4pNaY7BOS5bee4htsKohp_svsZA5SMe5WibxgTIwyqixooRGtPHHBwdhX7oBSK5Qyon_m40
         // segun esto los observers tambien pueden tener la referencia del subject
-        void setSubject( Processor* pSubjectPtr ) {
-            mainProcessSubject = *pSubjectPtr;
-        }
         void update(void* pUserPacket) {
-            infoPacket castedPacket = *(static_cast<infoPacket*>(pUserPacket));
+            infoPacket* castedPacket = (static_cast<infoPacket*>(pUserPacket));
             update(castedPacket);
         }
-        void update(infoPacket pUserPacket) {
+        void update(infoPacket* pUserPacket) {
             /*
             * en el packet interesa:
             * 1- nodo xml (padre) del svg
             * 2- lista de colores del usuario
             * 3- lista de puntos a buscar aproximar
             */
-            collectPaths(pUserPacket.nodeMod);
-            filterColor(pUserPacket.rgbColorListMod);
-            selectFinalPathContestants(pUserPacket.pointListMod);
+
+            cout << "control, packetInfo: " << endl;
+            cout << "Frame count: " << pUserPacket->frameMod << endl;
+            xml_attribute<>* controlAttr = pUserPacket->nodeMod->first_node()->first_attribute("svg");
+            cout << "Node control:\n" << controlAttr->value() << endl;
+            collectPaths(pUserPacket->nodeMod);
+            cout << "filtered members:" << endl;
+            filterColor(pUserPacket->rgbColorListMod);
+            for (auto p : filteredPathList) {
+                cout << p.getPath() << endl;
+            }
+            selectFinalPathContestants(pUserPacket->pointListMod);
             // ROUTING necesita la lista de paths seleccionados
-            pUserPacket.pathListMod = selectedPathList;
-            mainProcessSubject.notify(2, pUserPacket);
+            cout << "Selected paths:" << endl;
+            pUserPacket->pathListMod = selectedPathList;
+            for (auto path : selectedPathList) {
+                cout << path.getPath() << endl;
+            }
+            cout << "al done, now what?" << endl;
         }
 
         pair<double, double> collectProperPoint(string pathDescriptor) {
@@ -169,7 +178,6 @@ class Selector : public Observer {
 
         // 2
         void filterColor(vector<vector<int>> pColorList){
-            int pathNumber;
             string color;
             for (Path path : allPathsList){
                 color = path.getColor();
@@ -199,6 +207,7 @@ class Selector : public Observer {
             for (Path p : filteredPathList) {
                 for(pair<double, double> userPoint : pUserPoints) {
                     if (checkProximityBetweenTwoPoints(p, p.getProperPoint(), userPoint)) {
+                        cout << "Eureka!" << endl;
                         selectedPathList.push_back(p);
                         break; // solo tome un path por match
                     }
@@ -206,3 +215,4 @@ class Selector : public Observer {
             }
         }
 };
+#endif

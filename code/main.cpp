@@ -1,9 +1,7 @@
 
 //#include <bits/stdc++.h>
 #include "../headers/main.hpp"
-#include "../headers/Selector.hpp"
-#include "../headers/Router.hpp"
-#include "../headers/Generator.hpp"
+#include "../headers/Processor.hpp"
 
 //using namespace std;
 //using namespace rapidxml;
@@ -41,8 +39,7 @@ int main() {
     Selector selectionObserver = Selector();
     //Router routingObserver = Router();
     //Generator generationObserver = Generator();
-    mainProcess.attachSelector(selectionObserver);
-    selectionObserver.setSubject(&mainProcess);
+    mainProcess.attachSelector(&selectionObserver);
 
     // prepara user info
     infoPacket newPacket;
@@ -68,14 +65,12 @@ int main() {
         {3377, 137}
     };
     // prepara nodo padre del arbol
-    rapidxml::file<> svgFile("../svganimation/images/svg/wifi-2.svg");
+    rapidxml::file<> svgFile("ejemplos_svg/EjemploComplejo1.svg");
     rapidxml::xml_document<> svgDoc;
     svgDoc.parse<0>(svgFile.data());
     rapidxml::xml_node<>* svgRootNode = svgDoc.first_node();
     newPacket.nodeMod = svgRootNode;
-
-    mainProcess.notify(1, newPacket);
-
+    mainProcess.notify(1, &newPacket);
 
     return 0;
 }

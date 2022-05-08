@@ -14,8 +14,9 @@
 #include <utility>
 #include <thread>
 #include <bits/stdc++.h>
-
 #include "../headers/Path.hpp"
+#include "../headers/Observer.hpp"
+
 
 using namespace std;
 using namespace rapidxml; //Namespace de la librería
@@ -28,7 +29,9 @@ typedef struct infoPacket {
     int frameMod;           // solo para frame data
     string stringMod;       // algun string pertinente
     double angleMod;        // solo para angle data
-    xml_node<>* nodeMod;    // nodo padre del svg
+    rapidxml::file<> xmlFileMod;
+    rapidxml::xml_document<> xmlMod;
+    rapidxml::xml_node<>* nodeMod;    // nodo padre del svg
     // listas de elementos
     vector<string> hexColorListMod;
     vector<vector<int>> rgbColorListMod;
@@ -36,53 +39,5 @@ typedef struct infoPacket {
     vector<Path> pathListMod;
     vector<xml_node<>*> nodeListMod;
 };
-#include "../headers/Observer.hpp"
-#include "../headers/Processor.hpp"
-/*
-class Processor: public Subject {
-    private:
-        vector<Observer> observerList;
-    public:
-        Processor();
-        ~Processor();
-        void attach(Observer* pObserver) {
-            observerList.push_back( *(static_cast<Observer*>(pObserver)) );
-        }
-        void detach(Observer* pObserver) {
-            observerList.erase(remove(observerList.begin(), observerList.end(), *pObserver), observerList.end());
-        }
-        void notify(void* pPackageInfo) {
-        }
-        void notify(int pPhase, infoPacket pPacket) {
-            // hacer algo con los notify
-            switch (pPhase)
-            {
-            case 1:
-                // SELECTION
-                // envia el paquete como puntero a vacío
-                cout << "Llego a Selection" << endl;
-                observerList.at(0).update(static_cast<void*>(&pPacket));
-                break;
-            case 2:
-                // ROUTING
-                // envia el paquete como puntero a vacío
-                cout << "Llego a Routing" << endl;
-                //observerList.at(1).update(static_cast<void*>(&pPacket));
-                break;
-            case 3:
-                // GENERATION
-                // envia el paquete como puntero a vacío
-                //observerList.at(2).update(static_cast<void*>(&pPacket));
-                break;
-            default:
-                // no debería entrar aquí
-                break;
-            }
-        }
-};
-*/
-
-
-
 
 #endif

@@ -1,30 +1,31 @@
+#ifndef PROCESSOR_H
+#define PROCESSOR_H
 #include "../headers/main.hpp"
 #include "../headers/Selector.hpp"
 #include "../headers/Router.hpp"
 #include "../headers/Generator.hpp"
-
 class Processor: public Subject {
     private:
         int observerCount = 0;
-        Selector selectorObserver;
-        //Router routerObserver;
-        //Generator generatorObserver;
+        Selector* selectorObserver;
+        //Router* routerObserver;
+        //Generator* generatorObserver;
     public:
-        Processor();
-        ~Processor();
+        Processor() = default;
+        ~Processor(){};
         void attach(Observer* pObserver) {
-            cout << "stinky virtual method";
+            cout << "stinky virtual method with obj: " << pObserver << endl;
         }
-        void attachSelector(Selector pSelectorObj) {
+        void attachSelector(Selector* pSelectorObj) {
             selectorObserver = pSelectorObj;
         }
         void detach(Observer* pObserver) {
-            cout << "detach not implemented";
+            cout << "detach not implemented with obj: " << pObserver << endl;
         }
         void notify(void* pPackageInfo) {
-            cout << "" << endl;
+            cout << "Notify with void pointer: " << pPackageInfo << endl;
         }
-        void notify(int pPhase, infoPacket pPacket) {
+        void notify(int pPhase, infoPacket* pPacket) {
             // hacer algo con los notify
             switch (pPhase)
             {
@@ -32,7 +33,7 @@ class Processor: public Subject {
                 // SELECTION
                 // envia el paquete como puntero a vacío
                 cout << "Llego a Selection" << endl;
-                observerList.at(0).update(static_cast<void*>(&pPacket));
+                selectorObserver->update(pPacket);
                 break;
             case 2:
                 // ROUTING
@@ -42,6 +43,7 @@ class Processor: public Subject {
                 break;
             case 3:
                 // GENERATION
+                cout << "Llego a Generation" << endl;
                 // envia el paquete como puntero a vacío
                 //observerList.at(2).update(static_cast<void*>(&pPacket));
                 break;
@@ -51,3 +53,4 @@ class Processor: public Subject {
             }
         }
 };
+#endif
