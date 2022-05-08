@@ -219,58 +219,64 @@ class Router : public Observer {
             return LinearMovements;
         }
         void combineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int final, double degree, double width, double heigth,double numFrames){
-            int i,j,k;
-            int elementosIzq = mitad - inicio + 1;
-            int elementosDer = final - mitad;
+            int leftIndex,rigthIndex,k;
+            int leftElements = mitad - inicio + 1;
+            int rightElements = final - mitad;
             vector<pair<double, double>> respuesta;
-            vector<Path> izquierda(elementosIzq);
-            vector<Path> derecha(elementosDer);
-            for(int i = 0; i < elementosIzq; i++){
-                izquierda[i] = selectedPathList[inicio+i];
+            vector<Path> leftHalf(leftElements);
+            vector<Path> rightHalf(rightElements);
+            for(int i = 0; i < leftElements; i++){
+                leftHalf[i] = selectedPathList[inicio+i];
             }
-            for(int j = 0; j < elementosDer; j++){
-                derecha[j] = selectedPathList[mitad + 1 + j];
+            for(int j = 0; j < rightElements; j++){
+                rightHalf[j] = selectedPathList[mitad + 1 + j];
             }
-            i = 0;
-            j = 0;
+            leftIndex = 0;
+            rigthIndex = 0;
             k = inicio;
             double intersectionLeft, intersectionRigth;
-            while(i < elementosIzq && j < elementosDer){
-                intersectionLeft = izquierda[i].getIntersectionPoint().first;
-                intersectionRigth = derecha[j].getIntersectionPoint().first;
+            while(leftIndex < leftElements && rigthIndex < rightElements){
+                intersectionLeft = leftHalf[leftIndex].getIntersectionPoint().first;
+                intersectionRigth = rightHalf[rigthIndex].getIntersectionPoint().first;
                 if(intersectionLeft <= intersectionRigth){
+                    respuesta = calculateRoute(leftHalf[leftIndex],degree,width,heigth,numFrames);
                     if(intersectionLeft == intersectionRigth){
-                        respuesta = calculateRoute(izquierda[i],degree,width,heigth,numFrames);
-                        izquierda[i].setLinearMovements(respuesta);
-                        derecha[j].setLinearMovements(respuesta);
+                    leftHalf[leftIndex].setLinearMovements(respuesta);
+                    rightHalf[rigthIndex].setLinearMovements(respuesta);
                     }
-                    selectedPathList[k] = izquierda[i];
-                    i++;
+                    selectedPathList[k] = leftHalf[leftIndex];
+                    selectedPathList[k].setLinearMovements(respuesta);
+                    leftIndex++;
                 }else{
-                    selectedPathList[k] = derecha[j];
-                    respuesta = calculateRoute(derecha[j],degree,width,heigth,numFrames);
-                    derecha[j].setLinearMovements(respuesta);
-                    j++;
+                    respuesta = calculateRoute(rightHalf[rigthIndex],degree,width,heigth,numFrames);
+                    rightHalf[rigthIndex].setLinearMovements(respuesta);
+                    selectedPathList[k] = rightHalf[rigthIndex];
+                    selectedPathList[k].setLinearMovements(respuesta);
+
+                    rigthIndex++;
                 }
                 k++;
             }
 
-            while(j < elementosDer){
-                respuesta = calculateRoute(derecha[j],degree,width,heigth,numFrames);
-                derecha[j].setLinearMovements(respuesta);
-                selectedPathList[k] = derecha[j];
-                j++;
+            while(rigthIndex < rightElements){
+                respuesta = calculateRoute(rightHalf[rigthIndex],degree,width,heigth,numFrames);
+                rightHalf[rigthIndex].setLinearMovements(respuesta);
+                selectedPathList[k] = rightHalf[rigthIndex];
+                selectedPathList[k].setLinearMovements(respuesta);
+                rigthIndex++;
                 k++;
             }
 
-            while(i < elementosIzq){
-                respuesta = calculateRoute(izquierda[i],degree,width,heigth,numFrames);
-                izquierda[i].setLinearMovements(respuesta);
-                selectedPathList[k] = izquierda[i];
-                i++;
+            while(leftIndex < leftElements){
+                respuesta = calculateRoute(leftHalf[leftIndex],degree,width,heigth,numFrames);
+                leftHalf[leftIndex].setLinearMovements(respuesta);
+                selectedPathList[k] = leftHalf[leftIndex];
+                selectedPathList[k].setLinearMovements(respuesta);
+                leftIndex++;
                 k++;
             }
-        }
+
+            }
         void PrintVector(vector<Path> ejemplo){
             for(int i=0;i<ejemplo.size();i++){
                 double move = ejemplo[i].getLinearMovement()[1].first;
