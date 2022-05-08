@@ -29,11 +29,8 @@ typedef struct infoPacket {
     int frameMod;           // solo para frame data
     string filePathMod;       // algun string pertinente
     double angleMod;        // solo para angle data
-    /*
-    rapidxml::file<> xmlFileMod;
-    rapidxml::xml_document<> xmlMod;
-    rapidxml::xml_node<>* nodeMod;    // nodo padre del svg
-    */
+    double canvasWidth;
+    double canvasHeight;
     // listas de elementos
     vector<string> hexColorListMod;
     vector<vector<int>> rgbColorListMod;

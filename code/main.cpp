@@ -66,6 +66,8 @@ int main() {
     };
     newPacket.filePathMod = "tesla.svg";
     mainProcess.notify(1, &newPacket);
+    // para este punto el newPacket tiene info nueva
+    mainProcess.notify(2, &newPacket);
 
     return 0;
 }

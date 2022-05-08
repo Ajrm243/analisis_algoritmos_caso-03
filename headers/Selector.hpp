@@ -18,8 +18,8 @@ class Selector : public Observer {
     private:
     // ratio es un numero arbitrario que más o menos expresa qué tan grande es el canvas
     double ratio;
-    double canvasHeight;
-    double canvasWidth;
+    double selectHeight;
+    double selectWidth;
     vector<Path> allPathsList;
     vector<Path> filteredPathList;
     vector<Path> selectedPathList;
@@ -34,7 +34,7 @@ class Selector : public Observer {
             infoPacket* castedPacket = (static_cast<infoPacket*>(pUserPacket));
             update(castedPacket);
         }
-        void update(infoPacket* pUserPacket) {
+        vector<Path> update(infoPacket* pUserPacket) {
             /*
             * en el packet interesa:
             * 1- nodo xml (padre) del svg
@@ -81,6 +81,9 @@ class Selector : public Observer {
                 cout << path.getPath() << endl;
             }
             // magia oscura para llamar a Router y enviar el selectedPathList
+            pUserPacket->canvasHeight = selectHeight;
+            pUserPacket->canvasWidth = selectWidth;
+            return selectedPathList;
         }
 
         pair<double, double> collectProperPoint(string pathDescriptor) {

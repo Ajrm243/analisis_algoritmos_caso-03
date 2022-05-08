@@ -8,8 +8,10 @@ class Processor: public Subject {
     private:
         int observerCount = 0;
         Selector* selectorObserver;
-        //Router* routerObserver;
+        Router* routerObserver;
         //Generator* generatorObserver;
+        vector<Path> selectionResult;
+        infoPacket* mainPacket;
     public:
         Processor() = default;
         ~Processor(){};
@@ -18,6 +20,9 @@ class Processor: public Subject {
         }
         void attachSelector(Selector* pSelectorObj) {
             selectorObserver = pSelectorObj;
+        }
+        void attachRouter(Router* pRouterObj) {
+            routerObserver = pRouterObj;
         }
         void detach(Observer* pObserver) {
             cout << "detach not implemented with obj: " << pObserver << endl;
@@ -33,13 +38,14 @@ class Processor: public Subject {
                 // SELECTION
                 // envia el paquete como puntero a vacío
                 cout << "Llego a Selection" << endl;
-                selectorObserver->update(pPacket);
+                selectionResult = selectorObserver->update(pPacket);
+                mainPacket = pPacket;
                 break;
             case 2:
                 // ROUTING
                 // envia el paquete como puntero a vacío
                 cout << "Llego a Routing" << endl;
-                //observerList.at(1).update(static_cast<void*>(&pPacket));
+                routerObserver->update(pPacket);
                 break;
             case 3:
                 // GENERATION
