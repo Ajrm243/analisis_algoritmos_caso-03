@@ -47,10 +47,10 @@ int main() {
     newPacket.angleMod = 120;   // user angle
     newPacket.frameMod = 20;    // user frames
     newPacket.hexColorListMod = {
-        "FFFFFF",
-        "AABBCC",
-        "000000",
-        "9FBBCF"
+        "#FFFFFF",
+        "#AABBCC",
+        "#000000",
+        "#9FBBCF"
     };
     newPacket.rgbColorListMod = {
         {255, 255, 255},

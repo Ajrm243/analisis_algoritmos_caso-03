@@ -3,7 +3,7 @@
 #include "../headers/main.hpp"
 #include "../headers/Processor.hpp"
 // Se utiliza para escalar con el ratio la proximidad entre puntos
-#define MAGNETIC_POWER 1000000
+#define MAGNETIC_POWER 1800
 // Se utiliza para aproximar por un valor de color con cierta tolerancia
 #define DALTONISM_INDICATOR 30
 #ifndef SVG_DIMENSION_PATTERN
@@ -42,34 +42,45 @@ class Selector : public Observer {
             * 3- lista de puntos a buscar aproximar
             */
 
-            for (auto pp : pUserPacket->pointListMod) {
-                cout << pp.first << ", " << pp.second << endl;
-            }
-
-           cout << pUserPacket->filePathMod << endl;
+           //cout << pUserPacket->filePathMod << endl;
             string filePathContents = pUserPacket->filePathMod;
             rapidxml::file<> svgFile(filePathContents.c_str()); // cuidado con los tipos de datos
             rapidxml::xml_document<> myDoc; //Raíz del árbol DOM
             myDoc.parse<0>(svgFile.data()); //Parsea el XML en un DOM
-            rapidxml::xml_node<>* rootNode = myDoc.first_node("svg");
+            rapidxml::xml_node<>* rootNode = myDoc.first_node();
+            //cout << rootNode->name() << endl;
+            //cout << rootNode->first_attribute()->name() << endl;
+
+            rapidxml::xml_attribute<>* lookupAttr = rootNode->first_attribute("viewBox");
+            smatch viewBoxMatch;
+            string attrValue = static_cast<string>(lookupAttr->value());
+            regex_search(attrValue, viewBoxMatch, static_cast<regex>(SVG_DIMENSION_PATTERN));
+            // se opera por los grupos de captura
+            // el width es grupo 1 y height grupo 3
+            //cout << "Valor del match 1: " << viewBoxMatch[1].str() << endl;
+            //cout << "Valor del match 3: " << viewBoxMatch[3].str() << endl;
+            ratio = (stod(viewBoxMatch[1].str()) / stod(viewBoxMatch[3].str())) * MAGNETIC_POWER;
+            //cout << "Ratio: " << ratio << endl;
+
             rapidxml::xml_node<>* firstGroupNode = rootNode->first_node("g");
             //getSVGInfo();
             collectPaths(rootNode);
+            //cout << "Filter color...\n";
             filterColor(pUserPacket->rgbColorListMod);
 /*
-            cout << "Filtered paths:" << endl;
+            //cout << "Filtered paths:" << endl;
             for (auto p : filteredPathList) {
-                cout << p.getPath() << endl;
+                //cout << p.getPath() << endl;
             }
 */
             selectFinalPathContestants(pUserPacket->pointListMod);
             // ROUTING necesita la lista de paths seleccionados
-            cout << "Selected paths:" << endl;
+            //cout << "Selected paths:" << endl;
             pUserPacket->pathListMod = selectedPathList;
             for (auto path : selectedPathList) {
                 cout << path.getPath() << endl;
             }
-            cout << "al done, now what?" << endl;
+            // magia oscura para llamar a Router y enviar el selectedPathList
         }
 
         pair<double, double> collectProperPoint(string pathDescriptor) {
@@ -89,40 +100,11 @@ class Selector : public Observer {
                 Path path;
                 if (pNode->type() == node_element){
                     string label = pNode->name();
+                    //cout << "Entra con el label: " << label << endl;
                     path.setTag(label);
                     string d, color, idPath, stringWidth, stringHeight;
-                    // todo esto para conseguir el ratio del svg
-                    if (label == "svg") {
-                        cout << "entra a svg\n";
-                        // 2 opciones: viewBox o Height & Width
-                        xml_attribute<>* lookupAttr = pNode->first_attribute("viewBox");
-                        if (lookupAttr != NULL) {
-                            cout << "encuentra viewBox\n";
-                            // haga regex del viewbox y parsee los 2 puntos
-                            smatch viewBoxMatch;
-                            string attrValue = static_cast<string>(lookupAttr->value());
-                            regex_search(attrValue, viewBoxMatch, static_cast<regex>(SVG_DIMENSION_PATTERN));
-                            // se opera por los grupos de captura
-                            // el width es grupo 1 y height grupo 3
-                            cout << "Valor del match 1: " << viewBoxMatch[1].str() << endl;
-                            cout << "Valor del match 3: " << viewBoxMatch[3].str() << endl;
-                            ratio = (stod(viewBoxMatch[1].str()) * stod(viewBoxMatch[3].str())) * MAGNETIC_POWER;
-                        }
-                        else {
-                            cout << "no viewBox, normal\n";
-                            // se maneja con los atributos width y height
-                            stringWidth = pNode->first_attribute("width")->value();
-                            stringHeight = pNode->first_attribute("height")->value();
-
-                            cout << "Valor del width: " << stringWidth << endl;
-                            cout << "Valor del height: " << stringHeight << endl;
-
-                            // define el ratio de una vez
-                            ratio = (stod(stringWidth) * stod(stringHeight)) * MAGNETIC_POWER;
-                        }
-                    }
                     if (label == "path"){
-                        cout << "encuentra path\n";
+                        //cout << "encuentra path\n";
 /*
                         idPath = pNode->first_attribute("id")->value();
                         path.setId(idPath);
@@ -135,8 +117,10 @@ class Selector : public Observer {
                             path.setColor(pNode->first_attribute("stroke")->value());
                         } else if (pNode->first_attribute("fill") != NULL) {
                             path.setColor(pNode->first_attribute("fill")->value());
-                        } else {
+                        } else if (pNode->first_attribute("opacity") != NULL) {
                             path.setColor(pNode->first_attribute("opacity")->value());
+                        } else {
+                            path.setColor("#000000"); // negro default
                         }
 
                         // saca el punto propio de comparacion
@@ -144,6 +128,7 @@ class Selector : public Observer {
                         path.setProperPoint(pathPair);
                         // push a la lista de paths
                         allPathsList.push_back(path);
+                        //cout << "Collect count: " << allPathsList.size() << endl;
                     }
                 }
             }
@@ -153,10 +138,10 @@ class Selector : public Observer {
         bool matchRGB(vector<vector<int>> colorList, vector<int> colorToCompare){
             // colorlist[0]=RED, colorlist[1]=GREEN, colorlist[2]=BLUE
             bool matchRangeColor = false;
-            for(int i = 0; colorList.size(); i++){
-                int redDiference = abs(colorToCompare[0] - colorList[i][0]);
-                int blueDiference = abs(colorToCompare[0] - colorList[i][0]);
-                int greenDiference = abs(colorToCompare[0] - colorList[i][0]);
+            for(vector<int> pathColor : colorList){
+                int redDiference = abs(colorToCompare[0] - pathColor[0]);
+                int blueDiference = abs(colorToCompare[1] - pathColor[1]);
+                int greenDiference = abs(colorToCompare[2] - pathColor[2]);
                 if (redDiference <= DALTONISM_INDICATOR && blueDiference <= DALTONISM_INDICATOR && greenDiference <= DALTONISM_INDICATOR){
                     matchRangeColor = true;
                     break;
@@ -203,9 +188,11 @@ class Selector : public Observer {
 
         // 2
         void filterColor(vector<vector<int>> pColorList){
+            //cout << "Entro a filter color" << endl;
             string color;
             for (Path path : allPathsList){
-                color = path.getColor();
+                //cout << "path: " << path.getColor() << endl;
+                color = path.getColor();    // "#01AA25"
                 vector<int> rgbValues = convertHexColorToRGB(color);
                 if (matchRGB(pColorList,rgbValues)){
                     filteredPathList.push_back(path);
@@ -215,8 +202,8 @@ class Selector : public Observer {
 
         bool checkProximityBetweenTwoPoints(Path pathInfo, pair<double, double> pPathPoint, pair<double, double> pUserPoint) {
             double distance = sqrt( pow((pUserPoint.first - pPathPoint.first), 2) + pow((pUserPoint.second - pPathPoint.second), 2) );
-            cout << "Distancia calculada: " << distance << endl;
-            cout << "Ratio actual: " << ratio << endl;
+            //cout << "Distancia calculada: " << distance << endl;
+            //cout << "Ratio actual: " << ratio << endl;
             // chequea con el ratio que creó en base a las dimensiones del svg
             if (distance <= ratio){
                 // esto es importante para Routing y Generation
@@ -230,13 +217,14 @@ class Selector : public Observer {
 
         // 3
         void selectFinalPathContestants(vector<pair<double, double>> pUserPoints) {
+            //cout << "Entro a funcion?" << endl;
             // Greedy: solo chequea con el primer Moveto de cada path
             for (Path p : filteredPathList) {
-                cout << "AQUI EXISTE UN PATH FILTRADO" << endl;
+                //cout << "AQUI EXISTE UN PATH FILTRADO" << endl;
                 for(pair<double, double> userPoint : pUserPoints) {
-                    cout << "Intenta encontrar " << userPoint.first << ", " << userPoint.second << " en " << p.getTag() << endl;
+                    //cout << "Intenta encontrar " << userPoint.first << ", " << userPoint.second << " en " << p.getTag() << endl;
                     if (checkProximityBetweenTwoPoints(p, p.getProperPoint(), userPoint)) {
-                        cout << "Eureka!" << endl;
+                        //cout << "Eureka!" << endl;
                         selectedPathList.push_back(p);
                         break; // solo tome un punto por match de punto
                     }
