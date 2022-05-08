@@ -1,6 +1,12 @@
-
-double numberToCompare = (100 / 100)*1.8;
-
+#ifndef ROUTER_H
+#define ROUTER_H
+#ifndef PI
+#define PI 3.1459
+#endif
+#include "../headers/main.hpp"
+#include "../headers/Processor.hpp"
+#define MINIMUM_FRAME_MOVEMENT (100 / 100)*1.8
+double movementPerFrame;
 
 double radianesAGrados(double radianes)
 {
@@ -169,13 +175,13 @@ vector<double> FourthQuadrant(Path path, double degree, double width, double hei
 
  //Obtain the curve points using the de Casterljau's Algorithm
  //It uses linear interpolation between four points
-void DeCastreljauAlgortithm(double xStart, double yStart, double xEnd, double yEnd){
+void deCastreljauAlgortithm(double xStart, double yStart, double xEnd, double yEnd){
 
 }
 
 //Obtains the linear point of the path
 //It uses linear interpolation to obtain each pair of points
-vector<pair<double, double>> LineMovements(Path path,  vector<double> respuesta, double numFrames){ //Receives also the path to use getters and setters
+vector<pair<double, double>> lineMovements(Path path,  vector<double> respuesta, double numFrames){ //Receives also the path to use getters and setters
   vector<pair<double, double>> LinearMovements;
   pair <double, double> MovementPoint;
   double x0 = path.getIntersectionPoint().first;
@@ -185,7 +191,7 @@ vector<pair<double, double>> LineMovements(Path path,  vector<double> respuesta,
 
   while(numFrames > 0 ){
 
-    if(abs(sumMove) < numberToCompare){
+    if(abs(sumMove) < MINIMUM_FRAME_MOVEMENT){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
       MovementPoint.first = xp;
       MovementPoint.second = yp;
       LinearMovements.push_back(MovementPoint);
@@ -214,19 +220,19 @@ vector<pair<double, double>> LineMovements(Path path,  vector<double> respuesta,
   return LinearMovements;
 }
 
-vector<pair<double, double>> CalculateRoute(Path path, double degree, double width, double heigth,double numFrames){
+vector<pair<double, double>> calculateRoute(Path path, double degree, double width, double heigth,double numFrames){
   vector<double> respuesta;
   vector<pair<double, double>> LinearMovements;
   if (degree >=0 && degree <=90){respuesta = FirstQuadrant(path,degree,width,heigth,numFrames);}
   if(degree > 90 && degree <=180){respuesta = SecondQuadrant(path,degree,width,heigth,numFrames);}
   if(degree >180 && degree <=270){respuesta = ThirdQuadrant(path,degree,width,heigth,numFrames);}
   if(degree >270 && degree <=360){respuesta = FourthQuadrant(path,degree,width,heigth,numFrames);}
-  LinearMovements = LineMovements(path, respuesta,numFrames);
+  LinearMovements = lineMovements(path, respuesta,numFrames);
   return LinearMovements;
 }
 
 
-void CombineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int final, double degree, double width, double heigth,double numFrames){
+void combineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int final, double degree, double width, double heigth,double numFrames){
     int i,j,k;
     int elementosIzq = mitad - inicio + 1;
     int elementosDer = final - mitad;
@@ -249,7 +255,7 @@ void CombineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int fi
       if(intersectionLeft <= intersectionRigth){
           if(intersectionLeft == intersectionRigth){
             
-            respuesta = CalculateRoute(izquierda[i],degree,width,heigth,numFrames);
+            respuesta = calculateRoute(izquierda[i],degree,width,heigth,numFrames);
             izquierda[i].setLinearMovements(respuesta);
             derecha[j].setLinearMovements(respuesta);
           }
@@ -257,7 +263,7 @@ void CombineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int fi
           i++;
       }else{
           selectedPathList[k] = derecha[j];
-          respuesta = CalculateRoute(derecha[j],degree,width,heigth,numFrames);
+          respuesta = calculateRoute(derecha[j],degree,width,heigth,numFrames);
           derecha[j].setLinearMovements(respuesta);
           j++;
       }
@@ -265,7 +271,7 @@ void CombineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int fi
     }
 
     while(j < elementosDer){
-        respuesta = CalculateRoute(derecha[j],degree,width,heigth,numFrames);
+        respuesta = calculateRoute(derecha[j],degree,width,heigth,numFrames);
         derecha[j].setLinearMovements(respuesta);
         selectedPathList[k] = derecha[j];
         j++;
@@ -273,7 +279,7 @@ void CombineRouting(vector<Path> &selectedPathList,int inicio, int mitad, int fi
     }
 
     while(i < elementosIzq){
-        respuesta = CalculateRoute(izquierda[i],degree,width,heigth,numFrames);
+        respuesta = calculateRoute(izquierda[i],degree,width,heigth,numFrames);
         izquierda[i].setLinearMovements(respuesta);
         selectedPathList[k] = izquierda[i];
         i++;
@@ -287,30 +293,31 @@ void PrintVector(vector<Path> ejemplo){
     cout<<move<<endl;
   }
 }
-vector<Path> DeclareSolution(vector<Path>, double degree,double width,double heigth,double numFrames){
+vector<Path> DeclareSolution(vector<Path> pSelectedPathList, double pDegree,double pWidth,double pHeigth,double pNumFrames){
     pair<double, double> intersecc1;
     pair<double, double> intersecc2;
     vector<pair<double, double>> respuesta;
-    for(int i = 0; selectedPathList.size();i++){
-        intersecc2 = selectedPathList[i].getIntersectionPoint();
+    for(int i = 0; pSelectedPathList.size();i++){
+        intersecc2 = pSelectedPathList[i].getIntersectionPoint();
 
         if(intersecc1 == intersecc2){
-          selectedPathList[i].setLinearMovements(respuesta);
+          pSelectedPathList[i].setLinearMovements(respuesta);
           intersecc1 = intersecc2;
         }
         else{
-          respuesta = CalculateRoute(selectedPathList[i],degree,width,heigth,numFrames);
+          respuesta = calculateRoute(pSelectedPathList[i],pDegree,pWidth,pHeigth,pNumFrames);
           intersecc1 = intersecc2;
         }
     }
-    return selectedPathList;
+    return pSelectedPathList;
 }
 void Routing(vector<Path> &selectedPathList, int start, int end, double degree, double width, double heigth,double numFrames){
     if(start < end){
         int mitad = start + (end - start)/2;
         Routing(selectedPathList,start,mitad,degree,width,heigth,numFrames);
         Routing(selectedPathList,mitad+1,end,degree,width,heigth,numFrames);
-        CombineRouting(selectedPathList,start,mitad,end,degree,width,heigth,numFrames);
+        combineRouting(selectedPathList,start,mitad,end,degree,width,heigth,numFrames);
     }
 
 }
+#endif

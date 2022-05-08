@@ -1,33 +1,6 @@
-#include "main.hpp"
-
-//Recorre el elemento raíz del documento
-void extractXMLData(xml_document<>* doc){
-  xml_node<>* node = doc->first_node();
-
-  cout << "Etiqueta: " << node->name() << endl;
-  for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
-    cout << " Atributo: " << attrib->name() << endl;
-    cout << "\tValor: " << attrib->value() << endl;
-  }
-
-  extractNodeData(node);
-}
-
-//Recorre el resto de elementos del documento
-void extractNodeData(xml_node<>* node){
-  for (node = node->first_node(); node != NULL; node = node->next_sibling()){
-    if (node->type() == node_element){
-      cout << "Etiqueta: " << node->name() << endl;
-
-      for (xml_attribute<>* attrib = node->first_attribute(); attrib != NULL; attrib = attrib->next_attribute()){
-        cout << "\tAtributo: " << attrib->name() << endl;
-        cout << "\t-Valor: " << attrib->value() << endl;
-      }
-
-      extractNodeData(node);
-    }
-  }
-}
+#ifndef GENERATOR_H
+#define GENERATOR_H
+#include "../headers/main.hpp"
 
 void writeSVG(){
     //Escribir un nuevo archivo
@@ -43,7 +16,7 @@ void writeSVG(){
   copyFile.close(); //Escribe y cierra
 }
 
-int main(){
+int mainDouble(){
   /* DOM
     Transformación de un XML en un árbol donde cada elemento es un nodo. Cada nodo puede tener un valor y 
   una lista de atributos. A su vez, cada atributo tiene un valor.
@@ -89,8 +62,6 @@ int main(){
   copyFile << stringXML;
   copyFile.close(); //Escribe y cierra
 */
-
-
   //Document to String
   string strXML;
   print(back_inserter(strXML), myDoc, 0); //Copia el texto del Document en la variable
@@ -98,3 +69,4 @@ int main(){
 
   return 0;
 }
+#endif

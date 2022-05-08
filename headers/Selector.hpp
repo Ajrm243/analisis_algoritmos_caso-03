@@ -10,7 +10,7 @@
 #define SVG_DIMENSION_PATTERN "0 0 (\\d+(.?\\d+)?) (\\d+(.?\\d+)?)"
 #endif
 #ifndef PATH_D_POINT_PATTERN
-#define PATH_D_POINT_PATTERN "(\\d+(\\.\\d+)),(\\d+(\\.\\d+))"
+#define PATH_D_POINT_PATTERN "(\\d+(\\.\\d+)?),(\\d+(\\.\\d+)?)|(\\d+(\\.\\d)?)(\\s)?(\\d+(\\.\\d)?)"
 #endif
 
 using namespace std;
@@ -39,13 +39,14 @@ class Selector : public Observer {
             * 2- lista de colores del usuario
             * 3- lista de puntos a buscar aproximar
             */
-
-            cout << "control, packetInfo: " << endl;
-            cout << "Frame count: " << pUserPacket->frameMod << endl;
-            xml_attribute<>* controlAttr = pUserPacket->nodeMod->first_node()->first_attribute("svg");
-            cout << "Node control:\n" << controlAttr->value() << endl;
-            collectPaths(pUserPacket->nodeMod);
-            cout << "filtered members:" << endl;
+           cout << pUserPacket->filePathMod << endl;
+            string filePathContents = pUserPacket->filePathMod;
+            rapidxml::file<> svgFile(filePathContents.c_str()); // cuidado con los tipos de datos
+            rapidxml::xml_document<> myDoc; //Raíz del árbol DOM
+            myDoc.parse<0>(svgFile.data()); //Parsea el XML en un DOM
+            rapidxml::xml_node<>* rootNode = myDoc.first_node("svg");
+            rapidxml::xml_node<>* firstGroupNode = rootNode->first_node("g");
+            collectPaths(firstGroupNode);
             filterColor(pUserPacket->rgbColorListMod);
             for (auto p : filteredPathList) {
                 cout << p.getPath() << endl;
@@ -81,9 +82,11 @@ class Selector : public Observer {
                     string d, color, idPath, stringWidth, stringHeight;
                     // todo esto para conseguir el ratio del svg
                     if (label == "svg") {
+                        cout << "entra a svg\n";
                         // 2 opciones: viewBox o Height & Width
                         xml_attribute<>* lookupAttr = pNode->first_attribute("viewBox");
                         if (lookupAttr != NULL) {
+                            cout << "encuentra viewBox\n";
                             // haga regex del viewbox y parsee los 2 puntos
                             smatch viewBoxMatch;
                             string attrValue = static_cast<string>(lookupAttr->value());
@@ -93,6 +96,7 @@ class Selector : public Observer {
                             ratio = stod(viewBoxMatch[1].str()) / stod(viewBoxMatch[3].str()) * MAGNETIC_POWER;
                         }
                         else {
+                            cout << "no viewBox, normal\n";
                             // se maneja con los atributos width y height
                             stringWidth = pNode->first_attribute("width")->value();
                             stringHeight = pNode->first_attribute("height")->value();
@@ -101,6 +105,7 @@ class Selector : public Observer {
                         }
                     }
                     if (label == "path"){
+                        cout << "encuentra path\n";
                         idPath = pNode->first_attribute("id")->value();
                         path.setId(idPath);
                         d = pNode->first_attribute("d")->value();

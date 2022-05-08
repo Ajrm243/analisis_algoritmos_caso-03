@@ -27,17 +27,20 @@ typedef struct infoPacket {
     // tiene elementos modulares
     int packetPhase;
     int frameMod;           // solo para frame data
-    string stringMod;       // algun string pertinente
+    string filePathMod;       // algun string pertinente
     double angleMod;        // solo para angle data
+    /*
     rapidxml::file<> xmlFileMod;
     rapidxml::xml_document<> xmlMod;
     rapidxml::xml_node<>* nodeMod;    // nodo padre del svg
+    */
     // listas de elementos
     vector<string> hexColorListMod;
     vector<vector<int>> rgbColorListMod;
     vector<pair<double, double>> pointListMod;
     vector<Path> pathListMod;
     vector<xml_node<>*> nodeListMod;
+    infoPacket() = default;
 };
 
 #endif

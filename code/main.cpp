@@ -64,12 +64,7 @@ int main() {
         {2340, 680},
         {3377, 137}
     };
-    // prepara nodo padre del arbol
-    rapidxml::file<> svgFile("ejemplos_svg/EjemploComplejo1.svg");
-    rapidxml::xml_document<> svgDoc;
-    svgDoc.parse<0>(svgFile.data());
-    rapidxml::xml_node<>* svgRootNode = svgDoc.first_node();
-    newPacket.nodeMod = svgRootNode;
+    newPacket.filePathMod = "wifi-1.svg";
     mainProcess.notify(1, &newPacket);
 
     return 0;
