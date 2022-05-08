@@ -14,6 +14,7 @@ class Path {
     string heightSVG;
     string widthSVG;
 
+    pair<double, double> properPoint;
     pair<double,double> intersectionPoint;
     vector<pair<double,double>> linearMovement;
   public:
@@ -51,6 +52,9 @@ class Path {
     // Getter Width
     string getWidth() {return widthSVG;}
     
+    void setProperPoint(pair<double,double> p) {properPoint = p;}
+    pair<double,double> getProperPoint() {return properPoint;}
+
     void setIntersectionPoint(pair<double,double> intersection){intersectionPoint = intersection;}
     pair<double,double> getIntersectionPoint(){return intersectionPoint;}
 
