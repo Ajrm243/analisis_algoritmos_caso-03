@@ -5,8 +5,8 @@
 #endif
 #include "../headers/main.hpp"
 #include "../headers/Processor.hpp"
-#ifndef MINIMUM_FRAME_MOVEMENT
-#define MINIMUM_FRAME_MOVEMENT 1.8
+#ifndef FRAME_SENSITIVITY
+#define FRAME_SENSITIVITY 1.8
 #endif
 
 double radianesAGrados(double radianes)
@@ -31,15 +31,16 @@ class Router : public Observer {
             infoPacket* castedPacket = (static_cast<infoPacket*>(pObj));
         }
         void update(infoPacket* pUserPacket) {
-            cout << "Llega en el Router Class" << endl;
-            cout << "Dimensiones: (" << pUserPacket->canvasWidth << ", " << pUserPacket->canvasHeight << ")" << endl;
-            cHeight = pUserPacket->canvasHeight;
-            cWidth = pUserPacket->canvasWidth;
-            movementPerFrame = (cWidth / cHeight) * MINIMUM_FRAME_MOVEMENT;
-            cout << "minimumMovementPerFrame: " << movementPerFrame << endl;
             infoPacket workingPacket = *pUserPacket;
+            cout << "Llega en el Router Class" << endl;
+            cout << "Dimensiones: (" << workingPacket.canvasWidth << ", " << workingPacket.canvasHeight << ")" << endl;
+            cHeight = workingPacket.canvasHeight;
+            cWidth = workingPacket.canvasWidth;
+            cout << cHeight << "\t" << cWidth << endl;
+            //movementPerFrame = (cWidth / cHeight) * FRAME_SENSITIVITY;
+            //cout << "minimumMovementPerFrame: " << movementPerFrame << endl;
             routing(workingPacket.pathListMod, 0, workingPacket.pathListMod.size()-1, workingPacket.angleMod, workingPacket.canvasWidth, workingPacket.canvasHeight, workingPacket.frameMod);
-            for (Path p : pUserPacket->pathListMod) {
+            for (Path p : workingPacket.pathListMod) {
                 cout << "Movement at frame 0: (";
                 cout << p.getLinearMovement().at(0).first << ", " << p.getLinearMovement().at(0).second << ")" << endl;
             }
@@ -202,7 +203,7 @@ class Router : public Observer {
             double x1 = respuesta[1],y1=respuesta[2],yp=0,sumMove=respuesta[0];
             cout << "Sum move: " << sumMove << endl;
             while(numFrames > 0 ){
-                if(abs(sumMove) < movementPerFrame){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
+                if(abs(sumMove) < FRAME_SENSITIVITY){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
                     MovementPoint.first = xp;
                     MovementPoint.second = yp;
                     LinearMovements.push_back(MovementPoint);

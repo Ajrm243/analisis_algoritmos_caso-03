@@ -80,7 +80,10 @@ class Selector : public Observer {
             //cout << "Selected paths:" << endl;
             pUserPacket->pathListMod = selectedPathList;
             cout << "Selected count: " << selectedPathList.size() << endl;
-            // magia oscura para llamar a Router y enviar el selectedPathList
+            int i = 0;
+            for (auto p : selectedPathList) {
+                cout << ++i << ": " << p.getPath() << "\n\n";
+            }
             pUserPacket->canvasHeight = selectHeight;
             pUserPacket->canvasWidth = selectWidth;
             return selectedPathList;
