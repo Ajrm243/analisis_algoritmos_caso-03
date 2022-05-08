@@ -42,6 +42,7 @@ void writeSVG(){
   copyFile << stringXML;
   copyFile.close(); //Escribe y cierra
 }
+
 int main(){
   /* DOM
     Transformación de un XML en un árbol donde cada elemento es un nodo. Cada nodo puede tener un valor y 
