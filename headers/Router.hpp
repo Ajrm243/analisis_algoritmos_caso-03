@@ -203,7 +203,7 @@ class Router : public Observer {
             double x1 = respuesta[1],y1=respuesta[2],yp=0,sumMove=respuesta[0];
             cout << "Sum move: " << sumMove << endl;
             while(numFrames > 0 ){
-                if(abs(sumMove) < FRAME_SENSITIVITY){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
+                if(abs(sumMove) < movementPerFrame){  // cambiar por el double que sea atributo de la clase que se modifica multiplicando por esta constante
                     MovementPoint.first = xp;
                     MovementPoint.second = yp;
                     LinearMovements.push_back(MovementPoint);
