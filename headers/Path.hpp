@@ -11,8 +11,8 @@ class Path {
     string color;
 
     //Igual para todos //Sacar valor de SVG y que todos tengan acceso
-    string heightSVG;
-    string widthSVG;
+    double heightSVG;
+    double widthSVG;
 
     pair<double,double> intersectionPoint;
     vector<pair<double,double>> linearMovement;
@@ -42,14 +42,14 @@ class Path {
     string getColor() {return color;}
 
     // Setter Height
-    void setHeight(string s) {heightSVG = s;}
+    void setHeight(string s) {heightSVG = stod(s);}
     // Getter Height
-    string getHeight() {return heightSVG;}
+    double getHeight() {return heightSVG;}
 
     // Setter Width
-    void setWidth(string s) {widthSVG = s;}
+    void setWidth(string s) {widthSVG = stod(s);}
     // Getter Width
-    string getWidth() {return widthSVG;}
+    double getWidth() {return widthSVG;}
     
     void setIntersectionPoint(pair<double,double> intersection){intersectionPoint = intersection;}
     pair<double,double> getIntersectionPoint(){return intersectionPoint;}
