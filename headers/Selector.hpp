@@ -214,7 +214,7 @@ class Selector : public Observer {
                     if (checkProximityBetweenTwoPoints(p, p.getProperPoint(), userPoint)) {
                         cout << "Eureka!" << endl;
                         selectedPathList.push_back(p);
-                        break; // solo tome un path por match
+                        break; // solo tome un punto por match de punto
                     }
                 }
             }
